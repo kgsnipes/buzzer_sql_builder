@@ -1,13 +1,18 @@
 package com.buzzer.sqlbuilder;
 
 import com.buzzer.sqlbuilder.dto.Column;
+import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 
 
 public interface SQLBuilder {
 
-    SQLBuilder createDatabase(String database);
-    SQLBuilder dropDatabase(String database);
-    SQLBuilder useDatabase(String database);
+
+    SQLBuilder createDatabase(String database)throws BuzzerSQLBuilderException;
+    SQLBuilder dropDatabase(String database)throws BuzzerSQLBuilderException;
+    SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException;
+    SQLBuilder backUpDatabase(String database,String diskPath,Boolean isDifferentialBackup)throws BuzzerSQLBuilderException;
+
+
 
 //    SQLBuilder selectWithColumns(String []columns);
 //    SQLBuilder selectWithColumns(String []columns,String []aliasNames);
@@ -36,21 +41,21 @@ public interface SQLBuilder {
 //    SQLBuilder namedParameters(Map parameters);
 
 
-    SQLBuilder createTable(String tableName);
-    SQLBuilder withColumns(Column ...columns);
-    SQLBuilder withColumn(String columnName,String sqlType, Boolean isNull);
-    SQLBuilder withPK(String ...columns);
+    SQLBuilder createTable(String tableName)throws BuzzerSQLBuilderException;
+    SQLBuilder withColumns(Column ...columns)throws BuzzerSQLBuilderException;
+    SQLBuilder withColumn(String columnName,String sqlType, Boolean isNull)throws BuzzerSQLBuilderException;
+    SQLBuilder withPK(String ...columns)throws BuzzerSQLBuilderException;
 
 
     SQLBuilder beginTransaction();
-    SQLBuilder beginTransaction(String mode);
-    SQLBuilder setTransaction(String name);
+    SQLBuilder beginTransaction(String mode)throws BuzzerSQLBuilderException;
+    SQLBuilder setTransaction(String name)throws BuzzerSQLBuilderException;
     SQLBuilder endTransaction();
     SQLBuilder commit();
     SQLBuilder rollback();
-    SQLBuilder createSavePoint(String savePoint);
-    SQLBuilder releaseSavePoint(String savePoint);
-    SQLBuilder rollbackToSavePoint(String savePoint);
+    SQLBuilder createSavePoint(String savePoint)throws BuzzerSQLBuilderException;
+    SQLBuilder releaseSavePoint(String savePoint)throws BuzzerSQLBuilderException;
+    SQLBuilder rollbackToSavePoint(String savePoint)throws BuzzerSQLBuilderException;
 
 
     //SQLBuilder batch();
@@ -59,7 +64,7 @@ public interface SQLBuilder {
     //SQLBuilder insert(String tableName);
     //SQLBuilder withValues(Object []values);
 
-    SQLBuilder toStringOmitSemiColon();
+    String toStringOmitSemiColon();
 
 
 

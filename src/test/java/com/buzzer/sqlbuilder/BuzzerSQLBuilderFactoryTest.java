@@ -19,13 +19,14 @@ public class BuzzerSQLBuilderFactoryTest {
     @Before
     public void setup()
     {
-        LOG.info("Setting up factory junit test class");
+        LOG.info("Setting up factory for BuzzerSQLBuilderFactoryTest test class");
         factory=new BuzzerSQLBuilderFactoryImpl();
     }
 
     @Test
     public void getGenericBuilder()
     {
+        LOG.info("trying to fetch the generic sql builder");
         BuzzerSQLBuilder builder=factory.getSQLBuilderForDB(BuzzerDBType.GENERIC);
         Assert.that(builder.getClass().equals(BuzzerSQLBuilder.class) ,"instance retrieved is generic builder");
     }

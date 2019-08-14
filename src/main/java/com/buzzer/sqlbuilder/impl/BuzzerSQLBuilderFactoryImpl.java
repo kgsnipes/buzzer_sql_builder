@@ -12,10 +12,10 @@ public class BuzzerSQLBuilderFactoryImpl implements BuzzerSQLBuilderFactory {
         {
             case MARIADB:
             case MYSQL:
-                builder=new BuzzerMySQLBuilder(dbType);
+                builder=new BuzzerMySQLBuilder();
                 break;
             default:
-                builder=new BuzzerSQLBuilder(dbType);
+                builder=new BuzzerSQLBuilder();
                 break;
 
         }
