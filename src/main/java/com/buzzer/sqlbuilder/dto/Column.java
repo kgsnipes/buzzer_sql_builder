@@ -1,6 +1,5 @@
 package com.buzzer.sqlbuilder.dto;
 
-import sun.jvm.hotspot.debugger.SymbolLookup;
 
 import java.util.List;
 
@@ -14,13 +13,25 @@ public class Column extends BuzzerBean {
     private Object defaultValue;
     private Boolean isUnique;
 
+    public Column(){}
 
-    public Column(String name,String dataType,String aliasName,Boolean isPrimaryKey, Boolean autoIncrement, Boolean isNull ) {
+    public Column(String name,String aliasName){
+        this.setName(name);
+        this.aliasName=aliasName;
+    }
+
+    public Column(String name,String dataType,Boolean isNull,Object defaultValue) {
+        super();
+        this.isNull = isNull;
+        this.setName(name);
+        this.dataType=dataType;
+        this.defaultValue=defaultValue;
+    }
+
+    public Column(String name,String dataType,Boolean isPrimaryKey, Boolean autoIncrement) {
         super();
         this.isPrimaryKey = isPrimaryKey;
         this.autoIncrement = autoIncrement;
-        this.isNull = isNull;
-        this.aliasName = aliasName;
         this.setName(name);
         this.dataType=dataType;
     }
