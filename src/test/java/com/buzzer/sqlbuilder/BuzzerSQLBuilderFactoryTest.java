@@ -1,8 +1,8 @@
 package com.buzzer.sqlbuilder;
 
-import com.buzzer.sqlbuilder.impl.BuzzerMySQLBuilder;
-import com.buzzer.sqlbuilder.impl.BuzzerSQLBuilder;
-import com.buzzer.sqlbuilder.impl.BuzzerSQLBuilderFactoryImpl;
+import com.buzzer.sqlbuilder.service.impl.BuzzerMySQLBuilder;
+import com.buzzer.sqlbuilder.service.impl.BuzzerSQLBuilder;
+import com.buzzer.sqlbuilder.service.impl.BuzzerSQLBuilderFactoryImpl;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;

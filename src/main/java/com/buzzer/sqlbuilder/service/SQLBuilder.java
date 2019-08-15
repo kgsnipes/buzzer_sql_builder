@@ -1,17 +1,10 @@
-package com.buzzer.sqlbuilder;
+package com.buzzer.sqlbuilder.service;
 
 import com.buzzer.sqlbuilder.dto.Column;
 import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 
 
 public interface SQLBuilder {
-
-
-    SQLBuilder createDatabase(String database)throws BuzzerSQLBuilderException;
-    SQLBuilder dropDatabase(String database)throws BuzzerSQLBuilderException;
-    SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException;
-    SQLBuilder backUpDatabase(String database,String diskPath,Boolean isDifferentialBackup)throws BuzzerSQLBuilderException;
-
 
 
 //    SQLBuilder selectWithColumns(String []columns);
@@ -43,8 +36,7 @@ public interface SQLBuilder {
 
     SQLBuilder createTable(String tableName)throws BuzzerSQLBuilderException;
     SQLBuilder withColumns(Column ...columns)throws BuzzerSQLBuilderException;
-    SQLBuilder withColumn(String columnName,String sqlType, Boolean isNull)throws BuzzerSQLBuilderException;
-    SQLBuilder withPK(String ...columns)throws BuzzerSQLBuilderException;
+    SQLBuilder withColumn(String name,String dataType,String spec,Boolean isNull,Boolean isUnique,Object defaultValue,Boolean isAutoIncrement)throws BuzzerSQLBuilderException;
 
 
     SQLBuilder beginTransaction();

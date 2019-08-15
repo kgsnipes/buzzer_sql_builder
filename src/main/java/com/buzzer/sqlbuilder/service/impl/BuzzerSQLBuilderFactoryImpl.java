@@ -1,10 +1,11 @@
-package com.buzzer.sqlbuilder.impl;
+package com.buzzer.sqlbuilder.service.impl;
 
 import com.buzzer.sqlbuilder.BuzzerDBType;
-import com.buzzer.sqlbuilder.BuzzerSQLBuilderFactory;
+import com.buzzer.sqlbuilder.service.BuzzerSQLBuilderFactory;
+import com.buzzer.sqlbuilder.service.SQLBuilder;
 
 public class BuzzerSQLBuilderFactoryImpl implements BuzzerSQLBuilderFactory {
-    public BuzzerSQLBuilder getSQLBuilderForDB(BuzzerDBType dbType) {
+    public SQLBuilder getSQLBuilderForDB(BuzzerDBType dbType) {
 
         BuzzerSQLBuilder builder=null;
 
