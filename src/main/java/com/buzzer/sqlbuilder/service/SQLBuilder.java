@@ -3,6 +3,8 @@ package com.buzzer.sqlbuilder.service;
 import com.buzzer.sqlbuilder.dto.Column;
 import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 
+import java.util.List;
+
 
 public interface SQLBuilder {
 
@@ -34,21 +36,23 @@ public interface SQLBuilder {
 //    SQLBuilder namedParameters(Map parameters);
 
 
-    SQLBuilder createTable(String tableName)throws BuzzerSQLBuilderException;
+    SQLBuilder createTable(String schema,String tableName)throws BuzzerSQLBuilderException;
     SQLBuilder withColumns(Column ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder withColumn(String name,String dataType,String spec,Boolean isNull,Boolean isUnique,Object defaultValue,Boolean isAutoIncrement)throws BuzzerSQLBuilderException;
 
 
-    SQLBuilder beginTransaction();
-    SQLBuilder beginTransaction(String mode)throws BuzzerSQLBuilderException;
-    SQLBuilder setTransaction(String name)throws BuzzerSQLBuilderException;
-    SQLBuilder endTransaction();
-    SQLBuilder commit();
-    SQLBuilder rollback();
-    SQLBuilder createSavePoint(String savePoint)throws BuzzerSQLBuilderException;
-    SQLBuilder releaseSavePoint(String savePoint)throws BuzzerSQLBuilderException;
-    SQLBuilder rollbackToSavePoint(String savePoint)throws BuzzerSQLBuilderException;
+//    SQLBuilder beginTransaction();
+//    SQLBuilder beginTransaction(String mode)throws BuzzerSQLBuilderException;
+//    SQLBuilder setTransaction(String name)throws BuzzerSQLBuilderException;
+//    SQLBuilder endTransaction();
+//    SQLBuilder commit();
+//    SQLBuilder rollback();
+//    SQLBuilder createSavePoint(String savePoint)throws BuzzerSQLBuilderException;
+//    SQLBuilder releaseSavePoint(String savePoint)throws BuzzerSQLBuilderException;
+//    SQLBuilder rollbackToSavePoint(String savePoint)throws BuzzerSQLBuilderException;
 
+    void addQueryTransformer(QueryTransformer queryTransformer);
+    List<QueryTransformer> getQueryTransformers();
 
     //SQLBuilder batch();
     //SQLBuilder update();

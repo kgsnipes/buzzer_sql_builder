@@ -3,7 +3,7 @@ package com.buzzer.sqlbuilder.util;
 public interface BuzzerSQLConstants {
     String NEW_LINE="\n";
     String START_BRACKET="(";
-    String END_BRACKET="(";
+    String END_BRACKET=")";
     String SPACE=" ";
     String NULL="NULL";
     String NOT_NULL="NOT NULL";

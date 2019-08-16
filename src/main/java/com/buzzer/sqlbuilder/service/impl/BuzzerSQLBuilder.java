@@ -1,5 +1,7 @@
 package com.buzzer.sqlbuilder.service.impl;
 
+
+import com.buzzer.sqlbuilder.service.QueryTransformer;
 import com.buzzer.sqlbuilder.service.SQLBuilder;
 import com.buzzer.sqlbuilder.dto.Column;
 import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
@@ -7,7 +9,9 @@ import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -15,12 +19,23 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     protected StringBuilder sql=new StringBuilder();
+    protected List<QueryTransformer> queryTransformers=new ArrayList<>();
 
+    public BuzzerSQLBuilder() {
+        queryTransformers.add(new BuzzerCreateTableQueryTransformer());
+    }
 
-
-    public SQLBuilder createTable(String tableName)throws BuzzerSQLBuilderException {
+    public SQLBuilder createTable(String schema,String tableName)throws BuzzerSQLBuilderException {
         this.validateTableName(tableName);
-        this.sql.append(String.format(BuzzerSQLConstants.CREATE_TABLE_START,tableName));
+        if(StringUtils.isNotEmpty(schema))
+        {
+            this.sql.append(String.format(BuzzerSQLConstants.CREATE_TABLE_START,StringUtils.join(schema,".",tableName)));
+        }
+        else
+        {
+            this.sql.append(String.format(BuzzerSQLConstants.CREATE_TABLE_START,tableName));
+        }
+
         return this;
     }
 
@@ -50,8 +65,8 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     private String getSQLForColumn(Column c) {
 
         StringBuilder columnSql=new StringBuilder();
-        columnSql.append(" "+c.getName());
-        columnSql.append(" "+c.getDataType());
+        columnSql.append(BuzzerSQLConstants.SPACE+c.getName());
+        columnSql.append(BuzzerSQLConstants.SPACE+c.getDataType());
         if(StringUtils.isNotEmpty(c.getSpecification()))
         {
             columnSql.append(BuzzerSQLConstants.START_BRACKET+c.getSpecification()+BuzzerSQLConstants.END_BRACKET);
@@ -82,71 +97,27 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return columnSql.toString();
     }
 
-
-    public SQLBuilder withColumn(String columnName, String sqlType, String aliasName, Boolean isNotNull, Boolean isAutoIncrement,Boolean isPK) throws BuzzerSQLBuilderException{
-
-
-        return this;
+    @Override
+    public void addQueryTransformer(QueryTransformer queryTransformer) {
+        this.queryTransformers.add(queryTransformer);
     }
 
-    
-    public SQLBuilder withPK(String... columns) throws BuzzerSQLBuilderException{
-        return this;
+    @Override
+    public List<QueryTransformer> getQueryTransformers() {
+        return this.queryTransformers;
     }
 
-    
-    public SQLBuilder beginTransaction() {
-        return this;
-    }
 
-    
-    public SQLBuilder beginTransaction(String mode)throws BuzzerSQLBuilderException {
-        return this;
-    }
-
-    
-    public SQLBuilder setTransaction(String name) throws BuzzerSQLBuilderException{
-        return this;
-    }
-
-    
-    public SQLBuilder endTransaction() {
-        return this;
-    }
-
-    
-    public SQLBuilder commit() {
-        return this;
-    }
-
-    
-    public SQLBuilder rollback() {
-        return null;
-    }
-
-    
-    public SQLBuilder createSavePoint(String savePoint) throws BuzzerSQLBuilderException{
-        return null;
-    }
-
-    
-    public SQLBuilder releaseSavePoint(String savePoint) throws BuzzerSQLBuilderException{
-        return null;
-    }
-
-    
-    public SQLBuilder rollbackToSavePoint(String savePoint)throws BuzzerSQLBuilderException {
-        return null;
-    }
-
-    
     public String toStringOmitSemiColon() {
-        String sqlStatement=this.sql.toString();
+        String sqlStatement=toString();
         return sqlStatement.substring(0,sqlStatement.length()-1);
     }
 
     @Override
     public String toString() {
+        getQueryTransformers().stream().forEach(qt->{
+            this.sql=new StringBuilder(qt.transform(this.sql));
+        });
         return this.sql.toString();
     }
 

@@ -27,21 +27,21 @@ public class BuzzerSQLBuilderFactoryTest {
     public void getGenericBuilder()
     {
         LOG.info("trying to fetch the generic sql builder");
-        BuzzerSQLBuilder builder=factory.getSQLBuilderForDB(BuzzerDBType.GENERIC);
+        BuzzerSQLBuilder builder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.GENERIC);
         Assert.that(builder.getClass().equals(BuzzerSQLBuilder.class) ,"instance retrieved is generic builder");
     }
 
     @Test
     public void getMySQLBuilder()
     {
-        BuzzerSQLBuilder builder=factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+        BuzzerSQLBuilder builder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
         Assert.that(builder.getClass().equals(BuzzerMySQLBuilder.class) ,"instance retrieved is MySQL builder");
     }
 
     @Test
     public void getMariaDBBuilder()
     {
-        BuzzerSQLBuilder builder=factory.getSQLBuilderForDB(BuzzerDBType.MARIADB);
+        BuzzerSQLBuilder builder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MARIADB);
         Assert.that(builder.getClass().equals(BuzzerMySQLBuilder.class) ,"instance retrieved is MSQL builder and can be used for MariaDB");
     }
 }
