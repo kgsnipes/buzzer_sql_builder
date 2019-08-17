@@ -26,14 +26,24 @@ public class BuzzerSQLBuilderTest {
     @Test
     public void createTableTest()throws Exception
     {
-        String sql=sqlBuilder.createTable("kcpq","customer")
+        String sql=sqlBuilder.createTable("ecom","customer")
                 .withColumn("email","varchar","255",Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
                 .withColumn("firstname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
                 .withColumn("lastname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
                 .toString();
-        LOG.info("SQL generated "+ sql);
+        LOG.info("SQL generated - "+ sql);
         Assert.that(sql.contains("customer"),"name of the table is available");
-        
+
+    }
+
+    @Test
+    public void dropTableTest()throws Exception
+    {
+        String sql=sqlBuilder.dropTable("ecom","customer").toString();
+        LOG.info("SQL generated - "+ sql);
+        Assert.that(sql.contains("IF EXISTS"),"drop table statement has if exists");
+        Assert.that(sql.contains("DROP TABLE"),"drop table statement has drop table");
+
     }
 
 

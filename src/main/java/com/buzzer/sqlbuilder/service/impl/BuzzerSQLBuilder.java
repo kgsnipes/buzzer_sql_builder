@@ -29,7 +29,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         this.validateTableName(tableName);
         if(StringUtils.isNotEmpty(schema))
         {
-            this.sql.append(String.format(BuzzerSQLConstants.CREATE_TABLE_START,StringUtils.join(schema,".",tableName)));
+            this.sql.append(String.format(BuzzerSQLConstants.CREATE_TABLE_START,StringUtils.join(schema,BuzzerSQLConstants.PERIOD,tableName)));
         }
         else
         {
@@ -62,14 +62,28 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
+    @Override
+    public SQLBuilder dropTable(String schemaName,String tableName) throws BuzzerSQLBuilderException {
+        if(StringUtils.isNotEmpty(schemaName))
+        {
+            this.sql.append(String.format(BuzzerSQLConstants.DROP_TABLE_QUERY_FORMAT,StringUtils.join(schemaName.trim(),BuzzerSQLConstants.PERIOD,tableName.trim())));
+        }
+        else
+        {
+            this.sql.append(String.format(BuzzerSQLConstants.DROP_TABLE_QUERY_FORMAT,tableName.trim()));
+        }
+
+        return this;
+    }
+
     private String getSQLForColumn(Column c) {
 
         StringBuilder columnSql=new StringBuilder();
-        columnSql.append(BuzzerSQLConstants.SPACE+c.getName());
-        columnSql.append(BuzzerSQLConstants.SPACE+c.getDataType());
+        columnSql.append(BuzzerSQLConstants.SPACE+c.getName().trim());
+        columnSql.append(BuzzerSQLConstants.SPACE+c.getDataType().trim());
         if(StringUtils.isNotEmpty(c.getSpecification()))
         {
-            columnSql.append(BuzzerSQLConstants.START_BRACKET+c.getSpecification()+BuzzerSQLConstants.END_BRACKET);
+            columnSql.append(BuzzerSQLConstants.START_BRACKET+c.getSpecification().trim()+BuzzerSQLConstants.END_BRACKET);
         }
         columnSql.append(BuzzerSQLConstants.SPACE);
 
