@@ -1,7 +1,7 @@
 package com.buzzer.sqlbuilder.performance;
 
 import com.buzzer.sqlbuilder.BuzzerDBType;
-import com.buzzer.sqlbuilder.BuzzerSQLBuilderTest;
+
 import com.buzzer.sqlbuilder.service.impl.BuzzerSQLBuilder;
 import com.buzzer.sqlbuilder.service.impl.BuzzerSQLBuilderFactoryImpl;
 import org.apache.log4j.Logger;
@@ -17,26 +17,28 @@ public class BuzzerSQLBuilderPerformanceTest {
 
     BuzzerSQLBuilderFactoryImpl factory;
     BuzzerSQLBuilder sqlBuilder;
-    Logger LOG=Logger.getLogger(BuzzerSQLBuilderTest.class);
+    Logger LOG=Logger.getLogger(BuzzerSQLBuilderPerformanceTest.class);
 
     @Before
     public void setup()
     {
         LOG.info("Setting up factory for BuzzerSQLBuilderFactoryTest test class");
         factory=new BuzzerSQLBuilderFactoryImpl();
-        sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.GENERIC);
+        sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
     }
 
     @Test
     public void createTableTest()throws Exception
     {
         DateTime startTime=new DateTime(new Date());
-        for(int i=0;i<10000;i++)
+        for(int i=0;i<1000;i++)
         {
             String sql=sqlBuilder.createTable("ecom","customer")
+                    .withColumn("pk","bigint",null,Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
                     .withColumn("email","varchar","255",Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
                     .withColumn("firstname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
                     .withColumn("lastname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
+                    .addAutoIncrementOnColumn("pk",new Long(1000))
                     .toString();
         }
 
@@ -50,7 +52,7 @@ public class BuzzerSQLBuilderPerformanceTest {
     public void dropTableTest()throws Exception
     {
         DateTime startTime=new DateTime(new Date());
-        for(int i=0;i<10000;i++)
+        for(int i=0;i<1000;i++)
         {
             String sql=sqlBuilder.dropTable("ecom","customer").toString();
         }

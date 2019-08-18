@@ -1,5 +1,7 @@
 package com.buzzer.sqlbuilder.util;
 
+import org.apache.commons.lang3.RegExUtils;
+
 public interface BuzzerSQLConstants {
     String NEW_LINE="\n";
     String START_BRACKET="(";
@@ -12,6 +14,7 @@ public interface BuzzerSQLConstants {
     String END_STATEMENT="; ";
     String COMMA=",";
     String PERIOD=".";
+    String EMPTY="";
 
     String CREATE_DATABASE_QUERY_FORMAT="CREATE DATABASE %s "+END_STATEMENT;
     String DROP_DATABASE_QUERY_FORMAT="DROP DATABASE %s "+END_STATEMENT;
@@ -20,5 +23,16 @@ public interface BuzzerSQLConstants {
     String CREATE_TABLE_START=CREATE_TABLE+" %s "+START_BRACKET;
     String CREATE_TABLE_END=" "+END_BRACKET+END_STATEMENT;
     String DROP_TABLE_QUERY_FORMAT="DROP TABLE IF EXISTS %s "+END_STATEMENT;
+
+
+    String SQL_MARKER_BOUNDARY="##";
+    String SQL_MARKER_REGEX="("+SQL_MARKER_BOUNDARY+".*"+SQL_MARKER_BOUNDARY+")";
+
+
+    String MYSQL_AUTOINCREMENT="AUTO_INCREMENT";
+    String MYSQL_AUTOINCREMENT_VALUE_FLAG="AUTO_INCREMENT_VALUE";
+    String MYSQL_AUTOINCREMENT_VALUE_MARKER=SQL_MARKER_BOUNDARY+MYSQL_AUTOINCREMENT_VALUE_FLAG+"= %s "+SQL_MARKER_BOUNDARY;
+    String MYSQL_AUTOINCREMENT_ALTER_STATEMENT=NEW_LINE+" ALTER TABLE %s AUTO_INCREMENT=%s ;";
+
 
 }

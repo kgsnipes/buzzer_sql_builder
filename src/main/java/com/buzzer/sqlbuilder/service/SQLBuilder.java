@@ -8,6 +8,10 @@ import java.util.List;
 
 public interface SQLBuilder {
 
+    SQLBuilder createDatabase(String database)throws BuzzerSQLBuilderException;
+    SQLBuilder dropDatabase(String database)throws BuzzerSQLBuilderException;
+    SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException;
+
 
 //    SQLBuilder selectWithColumns(String []columns);
 //    SQLBuilder selectWithColumns(String []columns,String []aliasNames);
@@ -37,8 +41,10 @@ public interface SQLBuilder {
 
 
     SQLBuilder createTable(String schema,String tableName)throws BuzzerSQLBuilderException;
+    SQLBuilder createTable(String schema,String tableName,Boolean dropIfExists)throws BuzzerSQLBuilderException;
     SQLBuilder withColumns(Column ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder withColumn(String name,String dataType,String spec,Boolean isNull,Boolean isUnique,Object defaultValue,Boolean isAutoIncrement)throws BuzzerSQLBuilderException;
+    SQLBuilder withAutoIncrementValue(String column,Long startValue)throws BuzzerSQLBuilderException;
     SQLBuilder dropTable(String schemaName,String tableName)throws BuzzerSQLBuilderException;
 
 //    SQLBuilder beginTransaction();

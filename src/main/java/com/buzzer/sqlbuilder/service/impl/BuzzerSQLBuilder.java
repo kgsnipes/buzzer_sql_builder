@@ -6,6 +6,7 @@ import com.buzzer.sqlbuilder.service.SQLBuilder;
 import com.buzzer.sqlbuilder.dto.Column;
 import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,9 +24,25 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     public BuzzerSQLBuilder() {
         queryTransformers.add(new BuzzerCreateTableQueryTransformer());
+        queryTransformers.add(new BuzzerSQLMarkerRemoverQueryTransformer());
     }
 
-    public SQLBuilder createTable(String schema,String tableName)throws BuzzerSQLBuilderException {
+
+    public SQLBuilder createDatabase(String database) throws BuzzerSQLBuilderException {
+        throw new BuzzerSQLBuilderException("Not supported by Generic DB");
+    }
+
+
+    public SQLBuilder dropDatabase(String database) throws BuzzerSQLBuilderException {
+        throw new BuzzerSQLBuilderException("Not supported by Generic DB");
+    }
+
+
+    public SQLBuilder useDatabase(String database) throws BuzzerSQLBuilderException {
+        throw new BuzzerSQLBuilderException("Not supported by Generic DB");
+    }
+
+    public SQLBuilder createTable(String schema, String tableName)throws BuzzerSQLBuilderException {
         this.validateTableName(tableName);
         if(StringUtils.isNotEmpty(schema))
         {
@@ -39,7 +56,17 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
-    
+    @Override
+    public SQLBuilder createTable(String schema, String tableName, Boolean dropIfExists) throws BuzzerSQLBuilderException {
+        if(BooleanUtils.isTrue(dropIfExists))
+        {
+            this.dropTable(schema,tableName);
+        }
+        this.createTable(schema,tableName);
+        return this;
+    }
+
+
     public SQLBuilder withColumns(Column... columns)throws BuzzerSQLBuilderException {
         this.validateColumns(columns);
         Arrays.stream(columns).forEach(c->{
@@ -60,6 +87,12 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         this.validateColumn(c);
         this.sql.append(this.getSQLForColumn(c));
         return this;
+    }
+
+
+    public SQLBuilder withAutoIncrementValue(String column, Long startValue)throws BuzzerSQLBuilderException {
+
+        throw new BuzzerSQLBuilderException("Not supported by Generic DB");
     }
 
     @Override
