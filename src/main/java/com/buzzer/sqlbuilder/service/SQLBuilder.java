@@ -45,6 +45,7 @@ public interface SQLBuilder {
     SQLBuilder withColumns(Column ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder withColumn(String name,String dataType,String spec,Boolean isNull,Boolean isUnique,Object defaultValue,Boolean isAutoIncrement)throws BuzzerSQLBuilderException;
     SQLBuilder withAutoIncrementValue(String column,Long startValue)throws BuzzerSQLBuilderException;
+    SQLBuilder withIndexOnColumns(String indexName,String ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder dropTable(String schemaName,String tableName)throws BuzzerSQLBuilderException;
 
 //    SQLBuilder beginTransaction();

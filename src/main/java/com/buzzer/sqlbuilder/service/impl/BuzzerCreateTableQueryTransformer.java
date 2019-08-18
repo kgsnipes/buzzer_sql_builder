@@ -2,14 +2,18 @@ package com.buzzer.sqlbuilder.service.impl;
 
 import com.buzzer.sqlbuilder.service.QueryTransformer;
 import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
+import com.buzzer.sqlbuilder.util.BuzzerUtil;
+
 
 public class BuzzerCreateTableQueryTransformer implements QueryTransformer {
     @Override
     public StringBuilder transform(StringBuilder sql) {
-        if(sql.length()>0 && sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)>-1 && sql.lastIndexOf(BuzzerSQLConstants.COMMA)>-1 && sql.lastIndexOf(BuzzerSQLConstants.COMMA)>(sql.length()/2) && sql.lastIndexOf(BuzzerSQLConstants.COMMA)<sql.length())
+
+        int tableEndMarkerIndex=sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER);
+        if(tableEndMarkerIndex>-1)
         {
-            int commaIndex=sql.lastIndexOf(BuzzerSQLConstants.COMMA);
-            sql.replace(commaIndex,commaIndex+1,BuzzerSQLConstants.SPACE).insert(commaIndex,BuzzerSQLConstants.CREATE_TABLE_END);
+            sql.insert(tableEndMarkerIndex,BuzzerSQLConstants.CREATE_TABLE_END);
+            sql=new StringBuilder(BuzzerUtil.replaceAllInStringBuilder(sql,BuzzerSQLConstants.END_STATEMENT_BRACKET_REGEX,BuzzerSQLConstants.END_BRACKET+BuzzerSQLConstants.END_STATEMENT));
         }
         return sql;
     }

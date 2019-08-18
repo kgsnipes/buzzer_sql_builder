@@ -31,6 +31,25 @@ public class BuzzerMySQLBuilderTest {
                 .withColumn("firstname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
                 .withColumn("lastname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
                 .withAutoIncrementValue("pk",new Long(1000))
+                .withIndexOnColumns("customer_email_index","email")
+                .withIndexOnColumns("customer_name_index","firstname","lastname")
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        Assert.that(sql.contains("customer"),"name of the table is available");
+
+    }
+
+    @Test
+    public void createTableWithDropTest()throws Exception
+    {
+        String sql=sqlBuilder.createTable("ecom","customer",Boolean.TRUE)
+                .withColumn("pk","bigint",null,Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
+                .withColumn("email","varchar","255",Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
+                .withColumn("firstname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
+                .withColumn("lastname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
+                .withAutoIncrementValue("pk",new Long(1000))
+                .withIndexOnColumns("customer_email_index","email")
+                .withIndexOnColumns("customer_name_index","firstname","lastname")
                 .toString();
         LOG.info("SQL generated - "+ sql);
         Assert.that(sql.contains("customer"),"name of the table is available");

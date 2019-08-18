@@ -25,4 +25,11 @@ public class BuzzerUtil {
         return extracts;
 
     }
+
+    public static String replaceAllInStringBuilder(StringBuilder source,String regex,String replacement)
+    {
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(source);
+        return m.replaceAll(replacement);
+    }
 }

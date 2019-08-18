@@ -6,6 +6,7 @@ import com.buzzer.sqlbuilder.service.SQLBuilder;
 import com.buzzer.sqlbuilder.dto.Column;
 import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +54,8 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             this.sql.append(String.format(BuzzerSQLConstants.CREATE_TABLE_START,tableName));
         }
 
+        this.sql.append(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER);
+
         return this;
     }
 
@@ -60,7 +63,9 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder createTable(String schema, String tableName, Boolean dropIfExists) throws BuzzerSQLBuilderException {
         if(BooleanUtils.isTrue(dropIfExists))
         {
+            this.sql.append(BuzzerSQLConstants.NEW_LINE);
             this.dropTable(schema,tableName);
+            this.sql.append(BuzzerSQLConstants.NEW_LINE);
         }
         this.createTable(schema,tableName);
         return this;
@@ -70,7 +75,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder withColumns(Column... columns)throws BuzzerSQLBuilderException {
         this.validateColumns(columns);
         Arrays.stream(columns).forEach(c->{
-            this.sql.append(this.getSQLForColumn(c));
+            this.sql.insert(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER),this.getSQLForColumn(c));
         });
         return this;
     }
@@ -85,7 +90,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         c.setNull(isNull);
         c.setAutoIncrement(isAutoIncrement);
         this.validateColumn(c);
-        this.sql.append(this.getSQLForColumn(c));
+        this.sql.insert(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER),this.getSQLForColumn(c));
         return this;
     }
 
@@ -93,6 +98,20 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder withAutoIncrementValue(String column, Long startValue)throws BuzzerSQLBuilderException {
 
         throw new BuzzerSQLBuilderException("Not supported by Generic DB");
+    }
+
+
+    public SQLBuilder withIndexOnColumns(String indexName, String... columns) throws BuzzerSQLBuilderException {
+        if(StringUtils.isEmpty(indexName) || ObjectUtils.isEmpty(columns))
+        {
+            throw new BuzzerSQLBuilderException("indexname or columns cannot be empty");
+        }
+        String tableName=sql.substring(sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)+BuzzerSQLConstants.CREATE_TABLE.length()+1,sql.indexOf(BuzzerSQLConstants.START_BRACKET)).trim();
+        if(StringUtils.isNotEmpty(tableName))
+        {
+            this.sql.append(String.format(BuzzerSQLConstants.CREATE_INDEX_QUERY_FORMAT,indexName,tableName,StringUtils.join(columns,BuzzerSQLConstants.COMMA)));
+        }
+        return this;
     }
 
     @Override
@@ -112,6 +131,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     private String getSQLForColumn(Column c) {
 
         StringBuilder columnSql=new StringBuilder();
+        columnSql.append(BuzzerSQLConstants.NEW_LINE);
         columnSql.append(BuzzerSQLConstants.SPACE+c.getName().trim());
         columnSql.append(BuzzerSQLConstants.SPACE+c.getDataType().trim());
         if(StringUtils.isNotEmpty(c.getSpecification()))
@@ -139,7 +159,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             columnSql.append(BuzzerSQLConstants.SPACE+BuzzerSQLConstants.UNIQUE_FLAG+BuzzerSQLConstants.SPACE);
         }
 
-        columnSql.append(BuzzerSQLConstants.COMMA+BuzzerSQLConstants.NEW_LINE);
+       columnSql.append(BuzzerSQLConstants.COMMA);
 
         return columnSql.toString();
     }

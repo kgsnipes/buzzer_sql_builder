@@ -38,7 +38,7 @@ public class BuzzerSQLBuilderPerformanceTest {
                     .withColumn("email","varchar","255",Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
                     .withColumn("firstname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
                     .withColumn("lastname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
-                    .addAutoIncrementOnColumn("pk",new Long(1000))
+                    .withAutoIncrementValue("pk",new Long(1000))
                     .toString();
         }
 
