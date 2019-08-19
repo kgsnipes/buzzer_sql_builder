@@ -6,7 +6,6 @@ import com.buzzer.sqlbuilder.service.SQLBuilder;
 import com.buzzer.sqlbuilder.dto.Column;
 import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +43,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     }
 
     public SQLBuilder createTable(String schema, String tableName)throws BuzzerSQLBuilderException {
+        if(StringUtils.isEmpty(this.sql.toString()))
+        {
+            throw new BuzzerSQLBuilderException("Not a fresh create table query");
+        }
         this.validateTableName(tableName);
         if(StringUtils.isNotEmpty(schema))
         {
@@ -61,6 +64,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder createTable(String schema, String tableName, Boolean dropIfExists) throws BuzzerSQLBuilderException {
+        if(StringUtils.isEmpty(this.sql.toString()))
+        {
+            throw new BuzzerSQLBuilderException("create a new builder instance");
+        }
         if(BooleanUtils.isTrue(dropIfExists))
         {
             this.sql.append(BuzzerSQLConstants.NEW_LINE);
@@ -73,6 +80,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder withColumns(Column... columns)throws BuzzerSQLBuilderException {
+        if(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)==-1)
+        {
+            throw new BuzzerSQLBuilderException("first call the create table method");
+        }
         this.validateColumns(columns);
         Arrays.stream(columns).forEach(c->{
             this.sql.insert(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER),this.getSQLForColumn(c));
@@ -82,6 +93,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder withColumn(String name, String dataType, String spec, Boolean isNull, Boolean isUnique, Object defaultValue, Boolean isAutoIncrement) throws BuzzerSQLBuilderException {
+        if(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)==-1)
+        {
+            throw new BuzzerSQLBuilderException("first call the create table method");
+        }
         Column c=new Column();
         c.setName(name);
         c.setDataType(dataType);
@@ -102,6 +117,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder withIndexOnColumns(String indexName, String... columns) throws BuzzerSQLBuilderException {
+        if(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)==-1)
+        {
+            throw new BuzzerSQLBuilderException("first call the create table method");
+        }
         if(StringUtils.isEmpty(indexName) || ObjectUtils.isEmpty(columns))
         {
             throw new BuzzerSQLBuilderException("indexname or columns cannot be empty");
@@ -116,6 +135,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder dropTable(String schemaName,String tableName) throws BuzzerSQLBuilderException {
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            throw new BuzzerSQLBuilderException("create a new query instance");
+        }
         if(StringUtils.isNotEmpty(schemaName))
         {
             this.sql.append(String.format(BuzzerSQLConstants.DROP_TABLE_QUERY_FORMAT,StringUtils.join(schemaName.trim(),BuzzerSQLConstants.PERIOD,tableName.trim())));
@@ -127,6 +150,82 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
         return this;
     }
+
+    @Override
+    public SQLBuilder createView(String schema, String viewName) throws BuzzerSQLBuilderException {
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            throw new BuzzerSQLBuilderException("create a new builder instance");
+        }
+        if(StringUtils.isEmpty(schema) || StringUtils.isEmpty(viewName))
+        {
+            throw new BuzzerSQLBuilderException("schema or view name cannot be empty");
+        }
+        if(StringUtils.isNotEmpty(schema))
+        {
+            viewName=StringUtils.join(schema,BuzzerSQLConstants.PERIOD,viewName);
+        }
+        this.sql.append(BuzzerSQLConstants.NEW_LINE);
+        this.sql.append(String.format(BuzzerSQLConstants.CREATE_VIEW_QUERY_FORMAT,viewName));
+        this.sql.append(BuzzerSQLConstants.NEW_LINE);
+        return this;
+    }
+
+    @Override
+    public SQLBuilder updateView(String schema, String viewName) throws BuzzerSQLBuilderException {
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            throw new BuzzerSQLBuilderException("create a new builder instance");
+        }
+        if(StringUtils.isEmpty(schema) || StringUtils.isEmpty(viewName))
+        {
+            throw new BuzzerSQLBuilderException("schema or view name cannot be empty");
+        }
+        if(StringUtils.isNotEmpty(schema))
+        {
+            viewName=StringUtils.join(schema,BuzzerSQLConstants.PERIOD,viewName);
+        }
+        this.sql.append(BuzzerSQLConstants.NEW_LINE);
+        this.sql.append(String.format(BuzzerSQLConstants.CREATE_OR_REPLACE_VIEW_QUERY_FORMAT,viewName));
+        this.sql.append(BuzzerSQLConstants.NEW_LINE);
+        return this;
+    }
+
+    @Override
+    public SQLBuilder AsSelect(SQLBuilder selectQuery) throws BuzzerSQLBuilderException {
+        if(!(this.sql.indexOf(BuzzerSQLConstants.CREATE_VIEW)>-1 || this.sql.indexOf(BuzzerSQLConstants.CREATE_OR_REPLACE_VIEW)>-1))
+        {
+            throw new BuzzerSQLBuilderException("create a new builder instance");
+        }
+        if(ObjectUtils.isEmpty(selectQuery))
+        {
+            throw new BuzzerSQLBuilderException("select query for a view cannot be empty");
+        }
+        this.sql.append(selectQuery.toString());
+        this.sql.append(BuzzerSQLConstants.NEW_LINE);
+        return this;
+    }
+
+    @Override
+    public SQLBuilder dropView(String schema, String viewName) throws BuzzerSQLBuilderException {
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            throw new BuzzerSQLBuilderException("create a new builder instance");
+        }
+        if(StringUtils.isEmpty(schema) || StringUtils.isEmpty(viewName))
+        {
+            throw new BuzzerSQLBuilderException("schema or view name cannot be empty");
+        }
+        if(StringUtils.isNotEmpty(schema))
+        {
+            viewName=StringUtils.join(schema,BuzzerSQLConstants.PERIOD,viewName);
+        }
+        this.sql.append(BuzzerSQLConstants.NEW_LINE);
+        this.sql.append(String.format(BuzzerSQLConstants.DROP_VIEW_QUERY_FORMAT,viewName));
+        this.sql.append(BuzzerSQLConstants.NEW_LINE);
+        return this;
+    }
+
 
     private String getSQLForColumn(Column c) {
 

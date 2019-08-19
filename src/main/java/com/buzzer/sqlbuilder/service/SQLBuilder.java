@@ -48,6 +48,11 @@ public interface SQLBuilder {
     SQLBuilder withIndexOnColumns(String indexName,String ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder dropTable(String schemaName,String tableName)throws BuzzerSQLBuilderException;
 
+    SQLBuilder createView(String schema,String viewName)throws BuzzerSQLBuilderException;
+    SQLBuilder updateView(String schema,String viewName)throws BuzzerSQLBuilderException;
+    SQLBuilder AsSelect(SQLBuilder selectQuery)throws BuzzerSQLBuilderException;
+    SQLBuilder dropView(String schema,String viewName)throws BuzzerSQLBuilderException;
+
 //    SQLBuilder beginTransaction();
 //    SQLBuilder beginTransaction(String mode)throws BuzzerSQLBuilderException;
 //    SQLBuilder setTransaction(String name)throws BuzzerSQLBuilderException;

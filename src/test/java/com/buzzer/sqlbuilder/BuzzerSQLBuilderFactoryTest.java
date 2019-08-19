@@ -8,7 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import sun.jvm.hotspot.utilities.Assert;
 
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class BuzzerSQLBuilderFactoryTest {
@@ -43,5 +44,13 @@ public class BuzzerSQLBuilderFactoryTest {
     {
         BuzzerSQLBuilder builder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MARIADB);
         Assert.that(builder.getClass().equals(BuzzerMySQLBuilder.class) ,"instance retrieved is MSQL builder and can be used for MariaDB");
+    }
+
+    @Test
+    public void regexTest()
+    {
+        Pattern p = Pattern.compile("((CREATE) | (CREATE OR REPLACE) VIEW)");
+        Matcher m = p.matcher("CREATE OR VIEW");
+        LOG.info(m.find());
     }
 }
