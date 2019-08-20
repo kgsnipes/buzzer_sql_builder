@@ -12,13 +12,13 @@ public interface SQLBuilder {
     SQLBuilder dropDatabase(String database)throws BuzzerSQLBuilderException;
     SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException;
 
+    SQLBuilder selectAll()throws BuzzerSQLBuilderException ;
+    SQLBuilder selectColumns(String []columns)throws BuzzerSQLBuilderException;
+    SQLBuilder selectColumns(String []columns,String []aliasNames)throws BuzzerSQLBuilderException;
+    SQLBuilder selectColumns(String []columns,String []aliasNames,String distinctColumn)throws BuzzerSQLBuilderException;
+    SQLBuilder selectColumns(Column...columns)throws BuzzerSQLBuilderException;
 
-//    SQLBuilder selectWithColumns(String []columns);
-//    SQLBuilder selectWithColumns(String []columns,String []aliasNames);
-//    SQLBuilder selectWithColumns(String []columns,String []aliasNames,String []distinctColumns);
-//    SQLBuilder selectWithColumns(Column...columns);
-//
-//    SQLBuilder withTable(String table,String aliasName);
+    SQLBuilder fromTable(String table,String aliasName)throws BuzzerSQLBuilderException;
 //    SQLBuilder fromInnerQuery(SQLBuilder queryBuilder,String aliasName);
 //
 //

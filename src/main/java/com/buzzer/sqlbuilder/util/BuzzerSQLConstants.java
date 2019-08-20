@@ -21,6 +21,33 @@ public interface BuzzerSQLConstants {
     String END_STATEMENT_BRACKET_REGEX="(\\,\\s{0,}+\\)\\;)";
     String AS="AS";
 
+    String ASTERISK="*";
+
+    String SELECT="SELECT";
+    String FROM="FROM";
+    String WHERE="WHERE";
+    String JOIN="JOIN";
+    String INNER_JOIN="INNER JOIN";
+    String FULL_OUTER_JOIN="FULL OUTER JOIN";
+    String LEFT_JOIN="LEFT JOIN";
+    String RIGHT_JOIN="RIGHT JOIN";
+    String ON="ON";
+    String GROUP_BY="GROUP BY";
+    String ORDER_BY="ORDER BY";
+    String DISTINCT="DISTINCT";
+    String AND="AND";
+    String OR="OR";
+    String NOT="NOT";
+    String IS="IS";
+    String IN="IN";
+    String LIKE="LIKE";
+    String BETWEEN="BETWEEN";
+    String UNION="UNION";
+    String UNION_ALL="UNION ALL";
+
+
+
+
     String CREATE_DATABASE_QUERY_FORMAT="CREATE DATABASE %s "+END_STATEMENT;
     String DROP_DATABASE_QUERY_FORMAT="DROP DATABASE %s "+END_STATEMENT;
     String USE_DATABASE_QUERY_FORMAT="USE DATABASE %s "+END_STATEMENT;
@@ -49,7 +76,9 @@ public interface BuzzerSQLConstants {
     String CREATE_VIEW_QUERY_FORMAT=CREATE_VIEW+" %s "+AS;
     String CREATE_OR_REPLACE_VIEW="CREATE OR REPLACE VIEW";
     String CREATE_OR_REPLACE_VIEW_QUERY_FORMAT=CREATE_OR_REPLACE_VIEW+" %s "+AS;
-    String DROP_VIEW_QUERY_FORMAT="DROP VIEW %s ;";
-    String CREATE_OR_REPLACE_VIEW_REGEX="([CREATE | OR REPLACE] VIEW)";
+    String DROP_VIEW_QUERY_FORMAT="DROP VIEW IF EXISTS %s ;";
+
+
+
 
 }

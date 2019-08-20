@@ -42,10 +42,58 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         throw new BuzzerSQLBuilderException("Not supported by Generic DB");
     }
 
+    @Override
+    public SQLBuilder selectAll()throws BuzzerSQLBuilderException  {
+        if(StringUtils.isEmpty(this.sql.toString()))
+        {
+            this.throwExceptionForNewBuilder();
+        }
+        this.sql.append(BuzzerSQLConstants.SELECT).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.ASTERISK).append(BuzzerSQLConstants.SPACE);
+        return this;
+    }
+
+
+    public SQLBuilder selectColumns(String[] columns)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
+
+    public SQLBuilder selectColumns(String[] columns, String[] aliasNames)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
+
+    public SQLBuilder selectColumns(String[] columns, String[] aliasNames, String distinct)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
+
+    public SQLBuilder selectColumns(Column... columns)throws BuzzerSQLBuilderException {
+        this.validateColumnsForSelect(columns);
+        return this;
+    }
+
+    protected void validateColumnsForSelect(Column[] columns) throws BuzzerSQLBuilderException{
+//        if(ObjectUtils.isEmpty(columns))
+//        {
+//            throw new BuzzerSQLBuilderException()
+//        }
+//        Arrays.stream(columns)
+    }
+
+
+    public SQLBuilder fromTable(String table, String aliasName) {
+        if(this.sql.indexOf(BuzzerSQLConstants.SELECT)==-1)
+        {
+            this.throwExceptionForNewBuilder();
+        }
+        return this;
+    }
+
     public SQLBuilder createTable(String schema, String tableName)throws BuzzerSQLBuilderException {
         if(StringUtils.isEmpty(this.sql.toString()))
         {
-            throw new BuzzerSQLBuilderException("Not a fresh create table query");
+            this.throwExceptionForNewBuilder();
         }
         this.validateTableName(tableName);
         if(StringUtils.isNotEmpty(schema))
@@ -64,9 +112,9 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder createTable(String schema, String tableName, Boolean dropIfExists) throws BuzzerSQLBuilderException {
-        if(StringUtils.isEmpty(this.sql.toString()))
+        if(StringUtils.isNotEmpty(this.sql.toString()))
         {
-            throw new BuzzerSQLBuilderException("create a new builder instance");
+            this.throwExceptionForNewBuilder();
         }
         if(BooleanUtils.isTrue(dropIfExists))
         {
@@ -137,7 +185,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder dropTable(String schemaName,String tableName) throws BuzzerSQLBuilderException {
         if(StringUtils.isNotEmpty(this.sql.toString()))
         {
-            throw new BuzzerSQLBuilderException("create a new query instance");
+            this.throwExceptionForNewBuilder();
         }
         if(StringUtils.isNotEmpty(schemaName))
         {
@@ -155,7 +203,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder createView(String schema, String viewName) throws BuzzerSQLBuilderException {
         if(StringUtils.isNotEmpty(this.sql.toString()))
         {
-            throw new BuzzerSQLBuilderException("create a new builder instance");
+            this.throwExceptionForNewBuilder();
         }
         if(StringUtils.isEmpty(schema) || StringUtils.isEmpty(viewName))
         {
@@ -175,7 +223,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder updateView(String schema, String viewName) throws BuzzerSQLBuilderException {
         if(StringUtils.isNotEmpty(this.sql.toString()))
         {
-            throw new BuzzerSQLBuilderException("create a new builder instance");
+            this.throwExceptionForNewBuilder();
         }
         if(StringUtils.isEmpty(schema) || StringUtils.isEmpty(viewName))
         {
@@ -193,9 +241,9 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder AsSelect(SQLBuilder selectQuery) throws BuzzerSQLBuilderException {
-        if(!(this.sql.indexOf(BuzzerSQLConstants.CREATE_VIEW)>-1 || this.sql.indexOf(BuzzerSQLConstants.CREATE_OR_REPLACE_VIEW)>-1))
+        if(!(this.sql.indexOf(BuzzerSQLConstants.CREATE_VIEW)==-1 || this.sql.indexOf(BuzzerSQLConstants.CREATE_OR_REPLACE_VIEW)==-1))
         {
-            throw new BuzzerSQLBuilderException("create a new builder instance");
+            this.throwExceptionForNewBuilder();
         }
         if(ObjectUtils.isEmpty(selectQuery))
         {
@@ -210,7 +258,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder dropView(String schema, String viewName) throws BuzzerSQLBuilderException {
         if(StringUtils.isNotEmpty(this.sql.toString()))
         {
-            throw new BuzzerSQLBuilderException("create a new builder instance");
+            this.throwExceptionForNewBuilder();
         }
         if(StringUtils.isEmpty(schema) || StringUtils.isEmpty(viewName))
         {
@@ -325,5 +373,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             }
         }
 
+    }
+
+    protected void throwExceptionForNewBuilder()throws BuzzerSQLBuilderException
+    {
+        throw new BuzzerSQLBuilderException("create a new builder instance");
     }
 }
