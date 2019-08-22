@@ -33,6 +33,7 @@ public class BuzzerSQLBuilderPerformanceTest {
         DateTime startTime=new DateTime(new Date());
         for(int i=0;i<1000;i++)
         {
+            sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
             String sql=sqlBuilder.createTable("ecom","customer",Boolean.TRUE)
                     .withColumn("pk","bigint",null,Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
                     .withColumn("email","varchar","255",Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
@@ -56,6 +57,7 @@ public class BuzzerSQLBuilderPerformanceTest {
         DateTime startTime=new DateTime(new Date());
         for(int i=0;i<1000;i++)
         {
+            sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
             String sql=sqlBuilder.dropTable("ecom","customer").toString();
         }
 
@@ -63,5 +65,23 @@ public class BuzzerSQLBuilderPerformanceTest {
         int timeTaken= Seconds.secondsBetween(startTime,endTime).getSeconds();
         LOG.info("Execution time seconds - "+ timeTaken);
         Assert.that(Boolean.TRUE,"Execution finished.");
+    }
+
+    @Test
+    public void selectAllQueryTest()throws Exception
+    {
+        DateTime startTime=new DateTime(new Date());
+        for(int i=0;i<1000;i++)
+        {
+            sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+        String sql=sqlBuilder.selectAll().fromTable("ecom.customers","current_customers")
+                .toString();
+        }
+
+        DateTime endTime=new DateTime(new Date());
+        int timeTaken= Seconds.secondsBetween(startTime,endTime).getSeconds();
+        LOG.info("Execution time seconds - "+ timeTaken);
+        Assert.that(Boolean.TRUE,"Execution finished.");
+
     }
 }

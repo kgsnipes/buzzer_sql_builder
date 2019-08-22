@@ -1,6 +1,6 @@
 package com.buzzer.sqlbuilder.util;
 
-import org.apache.commons.lang3.RegExUtils;
+
 
 public interface BuzzerSQLConstants {
 
@@ -19,6 +19,7 @@ public interface BuzzerSQLConstants {
     String PERIOD=".";
     String EMPTY="";
     String END_STATEMENT_BRACKET_REGEX="(\\,\\s{0,}+\\)\\;)";
+    String NON_PRINT_CHARACTERS_REGEX="\\p{C}";
     String AS="AS";
 
     String ASTERISK="*";

@@ -10,10 +10,12 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 
 public class BuzzerSQLBuilder implements SQLBuilder {
@@ -44,49 +46,103 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder selectAll()throws BuzzerSQLBuilderException  {
-        if(StringUtils.isEmpty(this.sql.toString()))
+        if(StringUtils.isNotEmpty(this.sql.toString()))
         {
             this.throwExceptionForNewBuilder();
         }
-        this.sql.append(BuzzerSQLConstants.SELECT).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.ASTERISK).append(BuzzerSQLConstants.SPACE);
+        this.selectColumns(new String[]{"*"});
         return this;
     }
 
 
     public SQLBuilder selectColumns(String[] columns)throws BuzzerSQLBuilderException {
+
+        this.selectColumns(columns,null);
         return this;
     }
 
 
     public SQLBuilder selectColumns(String[] columns, String[] aliasNames)throws BuzzerSQLBuilderException {
+        this.selectColumns(columns,aliasNames,Boolean.FALSE);
         return this;
     }
 
 
-    public SQLBuilder selectColumns(String[] columns, String[] aliasNames, String distinct)throws BuzzerSQLBuilderException {
+    public SQLBuilder selectColumns(String[] columns, String[] aliasNames, Boolean useDistinct)throws BuzzerSQLBuilderException {
+
+        Column []cols=new Column[columns.length];
+        if(ObjectUtils.isEmpty(columns) ||(ObjectUtils.isNotEmpty(columns) && ObjectUtils.isNotEmpty(aliasNames) && columns.length!=aliasNames.length))
+        {
+            throw new BuzzerSQLBuilderException("please specify columns for select statement, or the columns do not match the number of aliases");
+        }
+
+        IntStream.range(0, columns.length).forEach(index->{
+            Column c=new Column();
+            c.setName(columns[index]);
+            if(ObjectUtils.isNotEmpty(aliasNames) && StringUtils.isNotEmpty(aliasNames[index]))
+            {
+                c.setAliasName(aliasNames[index]);
+            }
+            cols[index]=c;
+
+        });
+
+        this.selectColumns(useDistinct,cols);
         return this;
     }
 
 
-    public SQLBuilder selectColumns(Column... columns)throws BuzzerSQLBuilderException {
+    public SQLBuilder selectColumns(Boolean useDistinct,Column... columns)throws BuzzerSQLBuilderException {
         this.validateColumnsForSelect(columns);
+        this.sql.append(BuzzerSQLConstants.SELECT).append(BuzzerSQLConstants.SPACE);
+        if(BooleanUtils.isTrue(useDistinct))
+        {
+            this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.DISTINCT).append(BuzzerSQLConstants.SPACE);
+        }
+        List<String> colNames=new ArrayList<>();
+        IntStream.range(0, columns.length).forEach(index->{
+            StringBuilder colSpec=new StringBuilder();
+            colSpec.append(StringUtils.trimToEmpty(columns[index].getName()));
+            if(StringUtils.isNotEmpty(columns[index].getAliasName()))
+            {
+                colSpec.append(StringUtils.join(BuzzerSQLConstants.SPACE,BuzzerSQLConstants.AS,BuzzerSQLConstants.SPACE,StringUtils.trimToEmpty(columns[index].getAliasName())));
+            }
+            colNames.add(colSpec.toString());
+
+        });
+        this.sql.append(StringUtils.join(colNames,BuzzerSQLConstants.SPACE+BuzzerSQLConstants.COMMA+BuzzerSQLConstants.SPACE));
+        this.sql.append(BuzzerSQLConstants.SPACE);
         return this;
     }
 
     protected void validateColumnsForSelect(Column[] columns) throws BuzzerSQLBuilderException{
-//        if(ObjectUtils.isEmpty(columns))
-//        {
-//            throw new BuzzerSQLBuilderException()
-//        }
-//        Arrays.stream(columns)
+        if(ObjectUtils.isEmpty(columns))
+        {
+            throw new BuzzerSQLBuilderException("please mention some columns on the select statement");
+        }
+        for(Column col: columns)
+        {
+            if(StringUtils.isEmpty(col.getName()))
+            {
+                throw new BuzzerSQLBuilderException("column name cannot be empty");
+            }
+        }
+
     }
 
 
-    public SQLBuilder fromTable(String table, String aliasName) {
+    public SQLBuilder fromTable(String table, String aliasName)throws BuzzerSQLBuilderException {
         if(this.sql.indexOf(BuzzerSQLConstants.SELECT)==-1)
         {
             this.throwExceptionForNewBuilder();
         }
+        this.sql.append(BuzzerSQLConstants.FROM).append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(table));
+
+        if(StringUtils.isNotEmpty(aliasName))
+        {
+            this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.AS).append(BuzzerSQLConstants.SPACE).append(aliasName);
+        }
+        this.sql.append(BuzzerSQLConstants.SPACE);
         return this;
     }
 
@@ -183,7 +239,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder dropTable(String schemaName,String tableName) throws BuzzerSQLBuilderException {
-        if(StringUtils.isNotEmpty(this.sql.toString()))
+        if(StringUtils.isNotEmpty(StringUtils.trimToEmpty(this.sql.toString().replaceAll(BuzzerSQLConstants.NON_PRINT_CHARACTERS_REGEX, BuzzerSQLConstants.EMPTY))))
         {
             this.throwExceptionForNewBuilder();
         }

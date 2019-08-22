@@ -15,8 +15,8 @@ public interface SQLBuilder {
     SQLBuilder selectAll()throws BuzzerSQLBuilderException ;
     SQLBuilder selectColumns(String []columns)throws BuzzerSQLBuilderException;
     SQLBuilder selectColumns(String []columns,String []aliasNames)throws BuzzerSQLBuilderException;
-    SQLBuilder selectColumns(String []columns,String []aliasNames,String distinctColumn)throws BuzzerSQLBuilderException;
-    SQLBuilder selectColumns(Column...columns)throws BuzzerSQLBuilderException;
+    SQLBuilder selectColumns(String []columns,String []aliasNames,Boolean useDistinct)throws BuzzerSQLBuilderException;
+    SQLBuilder selectColumns(Boolean useDistinct,Column...columns)throws BuzzerSQLBuilderException;
 
     SQLBuilder fromTable(String table,String aliasName)throws BuzzerSQLBuilderException;
 //    SQLBuilder fromInnerQuery(SQLBuilder queryBuilder,String aliasName);

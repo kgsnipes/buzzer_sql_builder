@@ -66,5 +66,25 @@ public class BuzzerMySQLBuilderTest {
 
     }
 
+    @Test
+    public void selectAllQueryTest()throws Exception
+    {
+        String sql=sqlBuilder.selectAll().fromTable("ecom.customers","current_customers")
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        Assert.that(sql.contains("ecom.customers"),"name of the table is available");
+
+    }
+
+    @Test
+    public void selectWithColumnsQueryTest()throws Exception
+    {
+        String sql=sqlBuilder.selectColumns(new String[]{"email","name","age"}).fromTable("ecom.customers","current_customers")
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        Assert.that(sql.contains("ecom.customers"),"name of the table is available");
+
+    }
+
 
 }
