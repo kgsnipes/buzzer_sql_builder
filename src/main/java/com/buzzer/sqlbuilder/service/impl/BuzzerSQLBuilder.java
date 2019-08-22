@@ -147,7 +147,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     }
 
     public SQLBuilder createTable(String schema, String tableName)throws BuzzerSQLBuilderException {
-        if(StringUtils.isEmpty(this.sql.toString()))
+        if(StringUtils.isNotEmpty(this.sql.toString()) && this.sql.indexOf(BuzzerSQLConstants.DROP_TABLE_QUERY)==-1)
         {
             this.throwExceptionForNewBuilder();
         }

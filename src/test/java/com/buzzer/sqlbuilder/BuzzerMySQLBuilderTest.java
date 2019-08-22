@@ -87,4 +87,36 @@ public class BuzzerMySQLBuilderTest {
     }
 
 
+    @Test
+    public void createDatabaseTest()throws Exception
+    {
+        String sql=sqlBuilder.createDatabase("ecom")
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        Assert.that(sql.contains("ecom"),"name of the table is available");
+
+    }
+
+    @Test
+    public void dropDatabaseTest()throws Exception
+    {
+        String sql=sqlBuilder.dropDatabase("ecom")
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        Assert.that(sql.contains("ecom"),"name of the table is available");
+
+    }
+
+    @Test
+    public void useDatabaseTest()throws Exception
+    {
+        String sql=sqlBuilder.useDatabase("ecom")
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        Assert.that(sql.contains("ecom"),"name of the table is available");
+
+    }
+
+
+
 }

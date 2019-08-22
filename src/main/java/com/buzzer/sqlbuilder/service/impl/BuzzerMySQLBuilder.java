@@ -15,6 +15,10 @@ public class BuzzerMySQLBuilder extends BuzzerSQLBuilder implements SQLBuilder {
     }
 
     public SQLBuilder createDatabase(String database)throws BuzzerSQLBuilderException {
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            this.throwExceptionForNewBuilder();
+        }
         this.validateDatabaseName(database);
         this.sql.append(String.format(BuzzerSQLConstants.CREATE_DATABASE_QUERY_FORMAT,database));
         return this;
@@ -22,6 +26,10 @@ public class BuzzerMySQLBuilder extends BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder dropDatabase(String database) throws BuzzerSQLBuilderException{
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            this.throwExceptionForNewBuilder();
+        }
         this.validateDatabaseName(database);
         this.sql.append(String.format(BuzzerSQLConstants.DROP_DATABASE_QUERY_FORMAT,database));
         return this;
@@ -29,6 +37,10 @@ public class BuzzerMySQLBuilder extends BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException {
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            this.throwExceptionForNewBuilder();
+        }
         this.validateDatabaseName(database);
         this.sql.append(String.format(BuzzerSQLConstants.USE_DATABASE_QUERY_FORMAT,database));
         return this;
