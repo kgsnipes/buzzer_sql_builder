@@ -5,10 +5,25 @@ import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 
 import java.util.List;
 
-
+/**
+ * This interface defines all the methods that are implemented for the sql builder API
+ */
 public interface SQLBuilder {
 
+    /**
+     * This methods creates the SQL statement for creating a database in MySQL. This will not be supported on the Generic SQL flavour.
+     * @param database
+     * @return
+     * @throws BuzzerSQLBuilderException
+     */
     SQLBuilder createDatabase(String database)throws BuzzerSQLBuilderException;
+
+    /**
+     * This methods creates the SQL statement for creating a database in MySQL. This will not be supported on the Generic SQL flavour.
+     * @param database
+     * @return
+     * @throws BuzzerSQLBuilderException
+     */
     SQLBuilder dropDatabase(String database)throws BuzzerSQLBuilderException;
     SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException;
 
