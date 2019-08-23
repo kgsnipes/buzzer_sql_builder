@@ -11,10 +11,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.IntStream;
 
 
@@ -146,6 +143,72 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
+
+    public SQLBuilder fromQuery(SQLBuilder queryBuilder, String aliasName)throws BuzzerSQLBuilderException {
+        if(ObjectUtils.isEmpty(queryBuilder) || StringUtils.isEmpty(aliasName))
+        {
+            throw new BuzzerSQLBuilderException("the builder or the alias cannot be null");
+        }
+        if(queryBuilder.toString().indexOf(BuzzerSQLConstants.SELECT)==-1)
+        {
+            throw new BuzzerSQLBuilderException("the inner query needs to be a select statement");
+        }
+        this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.START_BRACKET).append(queryBuilder.toStringOmitSemiColon()).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.END_BRACKET).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.AS).append(StringUtils.trim(aliasName));
+
+        return this;
+    }
+
+
+    public SQLBuilder and(String operand, String operator, String value) throws BuzzerSQLBuilderException{
+        return this;
+    }
+
+
+    public SQLBuilder or(String operand, String operator, String value)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
+
+    public SQLBuilder where(String operand, String operator, String value)throws BuzzerSQLBuilderException {
+
+        if(this.sql.toString().indexOf(BuzzerSQLConstants.SELECT)==-1)
+        {
+            throw new BuzzerSQLBuilderException("the inner query needs to be a select statement");
+        }
+
+        return this;
+    }
+
+
+    public SQLBuilder groupBy(String[] columns)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
+    @Override
+    public SQLBuilder groupBy(Column... columns) throws BuzzerSQLBuilderException {
+        return null;
+    }
+
+
+    public SQLBuilder orderBy(String[] columns)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
+    @Override
+    public SQLBuilder orderBy(Column... columns) throws BuzzerSQLBuilderException {
+        return null;
+    }
+
+
+    public SQLBuilder positionalParameters(List parameters)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
+
+    public SQLBuilder namedParameters(Map parameters)throws BuzzerSQLBuilderException {
+        return this;
+    }
+
     public SQLBuilder createTable(String schema, String tableName)throws BuzzerSQLBuilderException {
         if(StringUtils.isNotEmpty(this.sql.toString()) && this.sql.indexOf(BuzzerSQLConstants.DROP_TABLE_QUERY)==-1)
         {
@@ -166,7 +229,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
-    @Override
+
     public SQLBuilder createTable(String schema, String tableName, Boolean dropIfExists) throws BuzzerSQLBuilderException {
         if(StringUtils.isNotEmpty(this.sql.toString()))
         {
@@ -195,7 +258,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
-    @Override
+
     public SQLBuilder withColumn(String name, String dataType, String spec, Boolean isNull, Boolean isUnique, Object defaultValue, Boolean isAutoIncrement) throws BuzzerSQLBuilderException {
         if(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)==-1)
         {

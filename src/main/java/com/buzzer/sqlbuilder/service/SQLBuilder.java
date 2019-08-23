@@ -4,6 +4,7 @@ import com.buzzer.sqlbuilder.dto.Column;
 import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This interface defines all the methods that are implemented for the sql builder API
@@ -34,7 +35,7 @@ public interface SQLBuilder {
     SQLBuilder selectColumns(Boolean useDistinct,Column...columns)throws BuzzerSQLBuilderException;
 
     SQLBuilder fromTable(String table,String aliasName)throws BuzzerSQLBuilderException;
-//    SQLBuilder fromInnerQuery(SQLBuilder queryBuilder,String aliasName);
+    SQLBuilder fromQuery(SQLBuilder queryBuilder,String aliasName)throws BuzzerSQLBuilderException;
 //
 //
 //    SQLBuilder join(String table,String alias);
@@ -46,13 +47,15 @@ public interface SQLBuilder {
 //
 //    SQLBuilder on(String sourceColumn,String targetColumn);
 //
-//    SQLBuilder and();
-//    SQLBuilder or();
-//    SQLBuilder where(String operand,String operator,String value);
-//    SQLBuilder groupBy(String []columns);
-//    SQLBuilder orderBy(String []columns);
-//    SQLBuilder positionalParameters(List parameters);
-//    SQLBuilder namedParameters(Map parameters);
+    SQLBuilder and(String operand,String operator,String value)throws BuzzerSQLBuilderException;
+    SQLBuilder or(String operand,String operator,String value)throws BuzzerSQLBuilderException;
+    SQLBuilder where(String operand,String operator,String value)throws BuzzerSQLBuilderException;
+    SQLBuilder groupBy(String []columns)throws BuzzerSQLBuilderException;
+    SQLBuilder groupBy(Column ...columns)throws BuzzerSQLBuilderException;
+    SQLBuilder orderBy(String []columns)throws BuzzerSQLBuilderException;
+    SQLBuilder orderBy(Column ...columns)throws BuzzerSQLBuilderException;
+    SQLBuilder positionalParameters(List parameters)throws BuzzerSQLBuilderException;
+    SQLBuilder namedParameters(Map parameters)throws BuzzerSQLBuilderException;
 
 
     SQLBuilder createTable(String schema,String tableName)throws BuzzerSQLBuilderException;
