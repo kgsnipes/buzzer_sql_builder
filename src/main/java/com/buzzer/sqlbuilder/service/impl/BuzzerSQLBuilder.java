@@ -1,6 +1,7 @@
 package com.buzzer.sqlbuilder.service.impl;
 
 
+import com.buzzer.sqlbuilder.dto.DateValue;
 import com.buzzer.sqlbuilder.service.QueryTransformer;
 import com.buzzer.sqlbuilder.service.SQLBuilder;
 import com.buzzer.sqlbuilder.dto.Column;
@@ -182,17 +183,20 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
+
     protected String getStringFromValue(Object value) {
         StringBuilder valStr=new StringBuilder();
-        if(value instanceof Date)
+        if(value instanceof DateValue)
         {
-            Date dateValue= (Date) value;
-            valStr.append(dateValue.toString());
+            DateValue dateValue= (DateValue) value;
+            valStr.append(BuzzerSQLConstants.SINGLE_QUOTE).append(dateValue.getFormattedDate()).append(BuzzerSQLConstants.SINGLE_QUOTE);
         }
         else if(value instanceof Collection)
         {
             Collection collectionValue= (Collection) value;
             collectionValue.stream().forEach(v->valStr.append(this.getStringFromValue(v)).append(BuzzerSQLConstants.COMMA));
+
+            return valStr.substring(0,valStr.length()-1);
 
         }
         else if(value.getClass().isArray())
@@ -200,19 +204,38 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             IntStream.range(0, Array.getLength(value)).forEach(index->{
                 valStr.append(this.getStringFromValue(Array.get(value,index))).append(BuzzerSQLConstants.COMMA);
             });
+            return valStr.substring(0,valStr.length()-1);
         }
-        else if(value instanceof  CharSequence)
+        else if(value instanceof CharSequence)
         {
-
+            valStr.append(BuzzerSQLConstants.SINGLE_QUOTE).append(StringUtils.trimToEmpty(value.toString())).append(BuzzerSQLConstants.SINGLE_QUOTE);
+        }
+        else if(value instanceof  Boolean)
+        {
+            valStr.append(value.toString());
+        }
+        else if(value instanceof  Number)
+        {
+            valStr.append(value.toString());
         }
 
 
-        return "";
+        return valStr.toString();
     }
 
     protected void isSelectOrUpdateStatementValidation()throws BuzzerSQLBuilderException
     {
-        if(this.sql.toString().indexOf(BuzzerSQLConstants.SELECT)==-1 || this.sql.toString().indexOf(BuzzerSQLConstants.UPDATE)==-1)
+        boolean isValid=false;
+        if(this.sql.indexOf(BuzzerSQLConstants.SELECT)==-1)
+        {
+            throw new BuzzerSQLBuilderException("the inner query needs to be a select statement or update statement");
+        }
+        else
+        {
+            isValid=true;
+        }
+
+        if(this.sql.indexOf(BuzzerSQLConstants.UPDATE)==-1 && !isValid)
         {
             throw new BuzzerSQLBuilderException("the inner query needs to be a select statement or update statement");
         }
@@ -225,7 +248,20 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             throw new BuzzerSQLBuilderException("the operand or operator or value cannot be empty");
         }
         this.sql.append(BuzzerSQLConstants.SPACE).append(condition).append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(operand));
-        this.sql.append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(operator)).append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(value)).append(BuzzerSQLConstants.SPACE);
+        this.sql.append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(operator)).append(BuzzerSQLConstants.SPACE);
+        switch (operator)
+        {
+            case BuzzerSQLConstants.SQLOperators.BETWEEN:
+
+                this.sql.append(BuzzerSQLConstants.START_BRACKET).append(StringUtils.trimToEmpty(value).replaceAll()).append(BuzzerSQLConstants.END_BRACKET);
+                break;
+            case BuzzerSQLConstants.SQLOperators.IN:
+                this.sql.append(BuzzerSQLConstants.START_BRACKET).append(StringUtils.trimToEmpty(value)).append(BuzzerSQLConstants.END_BRACKET);
+                break;
+                default:
+                    this.sql.append(StringUtils.trimToEmpty(value));
+        }
+        this.sql.append(BuzzerSQLConstants.SPACE);
 
     }
 

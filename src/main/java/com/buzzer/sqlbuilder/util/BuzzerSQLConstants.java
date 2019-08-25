@@ -1,6 +1,7 @@
 package com.buzzer.sqlbuilder.util;
 
 
+import java.text.SimpleDateFormat;
 
 public interface BuzzerSQLConstants {
 
@@ -21,6 +22,7 @@ public interface BuzzerSQLConstants {
     String END_STATEMENT_BRACKET_REGEX="(\\,\\s{0,}+\\)\\;)";
     String NON_PRINT_CHARACTERS_REGEX="\\p{C}";
     String AS="AS";
+    String SINGLE_QUOTE="'";
 
     String ASTERISK="*";
 
@@ -99,6 +101,19 @@ public interface BuzzerSQLConstants {
         String IN="IN";
         String LIKE="LIKE";
         String BETWEEN="BETWEEN";
+    }
+
+    interface DateFormats
+    {
+        interface SQL
+        {
+            SimpleDateFormat DATE=new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat DATETIME=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat TIMESTAMP=DATETIME;
+            SimpleDateFormat TIME=new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat YEAR_4=new SimpleDateFormat("yyyy");
+            SimpleDateFormat YEAR_2=new SimpleDateFormat("yy");
+        }
     }
 
 }
