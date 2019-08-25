@@ -47,9 +47,10 @@ public interface SQLBuilder {
 //
 //    SQLBuilder on(String sourceColumn,String targetColumn);
 //
-    SQLBuilder and(String operand,String operator,String value)throws BuzzerSQLBuilderException;
-    SQLBuilder or(String operand,String operator,String value)throws BuzzerSQLBuilderException;
-    SQLBuilder where(String operand,String operator,String value)throws BuzzerSQLBuilderException;
+    SQLBuilder and(String operand,String operator,Object value)throws BuzzerSQLBuilderException;
+    SQLBuilder or(String operand,String operator,Object value)throws BuzzerSQLBuilderException;
+    SQLBuilder where(String operand,String operator,Object value)throws BuzzerSQLBuilderException;
+
     SQLBuilder groupBy(String []columns)throws BuzzerSQLBuilderException;
     SQLBuilder groupBy(Column ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder orderBy(String []columns)throws BuzzerSQLBuilderException;

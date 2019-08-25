@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -154,29 +155,78 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             throw new BuzzerSQLBuilderException("the inner query needs to be a select statement");
         }
         this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.START_BRACKET).append(queryBuilder.toStringOmitSemiColon()).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.END_BRACKET).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.AS).append(StringUtils.trim(aliasName));
-
+        this.sql.append(BuzzerSQLConstants.SPACE);
         return this;
     }
 
 
-    public SQLBuilder and(String operand, String operator, String value) throws BuzzerSQLBuilderException{
+    public SQLBuilder and(String operand, String operator, Object value) throws BuzzerSQLBuilderException{
+        this.isSelectOrUpdateStatementValidation();
+        this.addConditionToStatement(BuzzerSQLConstants.AND,operand,operator,getStringFromValue(value));
         return this;
     }
 
 
-    public SQLBuilder or(String operand, String operator, String value)throws BuzzerSQLBuilderException {
+    public SQLBuilder or(String operand, String operator, Object value)throws BuzzerSQLBuilderException {
+        this.isSelectOrUpdateStatementValidation();
+        this.addConditionToStatement(BuzzerSQLConstants.OR,operand,operator,getStringFromValue(value));
         return this;
     }
 
 
-    public SQLBuilder where(String operand, String operator, String value)throws BuzzerSQLBuilderException {
+    public SQLBuilder where(String operand, String operator, Object value)throws BuzzerSQLBuilderException {
 
-        if(this.sql.toString().indexOf(BuzzerSQLConstants.SELECT)==-1)
+        this.isSelectOrUpdateStatementValidation();
+
+        this.addConditionToStatement(BuzzerSQLConstants.WHERE,operand,operator,getStringFromValue(value));
+        return this;
+    }
+
+    protected String getStringFromValue(Object value) {
+        StringBuilder valStr=new StringBuilder();
+        if(value instanceof Date)
         {
-            throw new BuzzerSQLBuilderException("the inner query needs to be a select statement");
+            Date dateValue= (Date) value;
+            valStr.append(dateValue.toString());
+        }
+        else if(value instanceof Collection)
+        {
+            Collection collectionValue= (Collection) value;
+            collectionValue.stream().forEach(v->valStr.append(this.getStringFromValue(v)).append(BuzzerSQLConstants.COMMA));
+
+        }
+        else if(value.getClass().isArray())
+        {
+            IntStream.range(0, Array.getLength(value)).forEach(index->{
+                valStr.append(this.getStringFromValue(Array.get(value,index))).append(BuzzerSQLConstants.COMMA);
+            });
+        }
+        else if(value instanceof  CharSequence)
+        {
+
         }
 
-        return this;
+
+        return "";
+    }
+
+    protected void isSelectOrUpdateStatementValidation()throws BuzzerSQLBuilderException
+    {
+        if(this.sql.toString().indexOf(BuzzerSQLConstants.SELECT)==-1 || this.sql.toString().indexOf(BuzzerSQLConstants.UPDATE)==-1)
+        {
+            throw new BuzzerSQLBuilderException("the inner query needs to be a select statement or update statement");
+        }
+    }
+
+    protected void addConditionToStatement(String condition,String operand, String operator, String value)throws BuzzerSQLBuilderException
+    {
+        if(StringUtils.isEmpty(operand) || StringUtils.isEmpty(operator) || StringUtils.isEmpty(value))
+        {
+            throw new BuzzerSQLBuilderException("the operand or operator or value cannot be empty");
+        }
+        this.sql.append(BuzzerSQLConstants.SPACE).append(condition).append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(operand));
+        this.sql.append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(operator)).append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(value)).append(BuzzerSQLConstants.SPACE);
+
     }
 
 
@@ -186,7 +236,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     @Override
     public SQLBuilder groupBy(Column... columns) throws BuzzerSQLBuilderException {
-        return null;
+        return this;
     }
 
 

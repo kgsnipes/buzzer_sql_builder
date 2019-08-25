@@ -47,6 +47,8 @@ public interface BuzzerSQLConstants {
     String UNION_ALL="UNION ALL";
 
 
+    String UPDATE="UPDATE";
+
 
 
     String CREATE_DATABASE_QUERY_FORMAT="CREATE DATABASE %s "+END_STATEMENT;
@@ -82,5 +84,21 @@ public interface BuzzerSQLConstants {
 
 
 
+    interface SQLOperators
+    {
+        String GT=">";
+        String LT="<";
+        String GE=">=";
+        String LE="<=";
+        String EQ="=";
+        String NE="<>";
+        String AND="AND";
+        String OR="OR";
+        String NOT="NOT";
+        String IS="IS";
+        String IN="IN";
+        String LIKE="LIKE";
+        String BETWEEN="BETWEEN";
+    }
 
 }
