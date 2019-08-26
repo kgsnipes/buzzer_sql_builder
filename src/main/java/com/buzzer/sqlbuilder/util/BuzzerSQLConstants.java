@@ -83,7 +83,7 @@ public interface BuzzerSQLConstants {
     String CREATE_OR_REPLACE_VIEW="CREATE OR REPLACE VIEW";
     String CREATE_OR_REPLACE_VIEW_QUERY_FORMAT=CREATE_OR_REPLACE_VIEW+" %s "+AS;
     String DROP_VIEW_QUERY_FORMAT="DROP VIEW IF EXISTS %s ;";
-
+    String REPLACE_COMMA_WITH_AND_REGEX="?\\'\\s{0,}\\,\\s";
 
 
     interface SQLOperators
@@ -101,6 +101,9 @@ public interface BuzzerSQLConstants {
         String IN="IN";
         String LIKE="LIKE";
         String BETWEEN="BETWEEN";
+        String IS_NULL="IS NULL";
+        String NOT_NULL="NOT NULL";
+        String NOT_IN="NOT IN";
     }
 
     interface DateFormats

@@ -253,7 +253,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         {
             case BuzzerSQLConstants.SQLOperators.BETWEEN:
 
-                this.sql.append(BuzzerSQLConstants.START_BRACKET).append(StringUtils.trimToEmpty(value).replaceAll()).append(BuzzerSQLConstants.END_BRACKET);
+              //  this.sql.append(BuzzerSQLConstants.START_BRACKET).append(StringUtils.trimToEmpty(value).replaceAll()).append(BuzzerSQLConstants.END_BRACKET);
                 break;
             case BuzzerSQLConstants.SQLOperators.IN:
                 this.sql.append(BuzzerSQLConstants.START_BRACKET).append(StringUtils.trimToEmpty(value)).append(BuzzerSQLConstants.END_BRACKET);
