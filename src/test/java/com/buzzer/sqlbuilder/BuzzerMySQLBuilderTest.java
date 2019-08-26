@@ -104,7 +104,7 @@ public class BuzzerMySQLBuilderTest {
                 .where("dob", BuzzerSQLConstants.SQLOperators.GE,DateValue.create(new Date(),BuzzerSQLConstants.DateFormats.SQL.DATETIME))
                 .and("email",BuzzerSQLConstants.SQLOperators.LIKE,"%@gmail.com")
                 .or("name",BuzzerSQLConstants.SQLOperators.LIKE,"randy%")
-                .and("age",BuzzerSQLConstants.SQLOperators.BETWEEN,new Integer[]{20,30})
+                .and("age",BuzzerSQLConstants.SQLOperators.BETWEEN,new String[]{"hello","world"})
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);

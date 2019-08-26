@@ -83,7 +83,9 @@ public interface BuzzerSQLConstants {
     String CREATE_OR_REPLACE_VIEW="CREATE OR REPLACE VIEW";
     String CREATE_OR_REPLACE_VIEW_QUERY_FORMAT=CREATE_OR_REPLACE_VIEW+" %s "+AS;
     String DROP_VIEW_QUERY_FORMAT="DROP VIEW IF EXISTS %s ;";
-    String REPLACE_COMMA_WITH_AND_REGEX="?\\'\\s{0,}\\,\\s";
+
+    String REPLACE_COMMA_WITH_AND_REGEX="(\\#\\#\\s{0,}\\,\\s{0,}\\#\\#)";
+
 
 
     interface SQLOperators

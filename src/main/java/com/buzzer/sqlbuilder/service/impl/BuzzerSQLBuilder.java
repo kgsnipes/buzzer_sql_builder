@@ -16,6 +16,8 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static com.buzzer.sqlbuilder.util.BuzzerSQLConstants.REPLACE_COMMA_WITH_AND_REGEX;
+
 
 public class BuzzerSQLBuilder implements SQLBuilder {
 
@@ -186,6 +188,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
     protected String getStringFromValue(Object value) {
         StringBuilder valStr=new StringBuilder();
+        String commaMarker=StringUtils.join(BuzzerSQLConstants.SQL_MARKER_BOUNDARY,BuzzerSQLConstants.COMMA,BuzzerSQLConstants.SQL_MARKER_BOUNDARY);
         if(value instanceof DateValue)
         {
             DateValue dateValue= (DateValue) value;
@@ -193,18 +196,19 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         }
         else if(value instanceof Collection)
         {
-            Collection collectionValue= (Collection) value;
-            collectionValue.stream().forEach(v->valStr.append(this.getStringFromValue(v)).append(BuzzerSQLConstants.COMMA));
 
-            return valStr.substring(0,valStr.length()-1);
+            Collection collectionValue= (Collection) value;
+            collectionValue.stream().forEach(v->valStr.append(BuzzerSQLConstants.SPACE).append(this.getStringFromValue(v)).append(BuzzerSQLConstants.SPACE).append(commaMarker));
+
+            return valStr.substring(0,valStr.length()-commaMarker.length());
 
         }
         else if(value.getClass().isArray())
         {
             IntStream.range(0, Array.getLength(value)).forEach(index->{
-                valStr.append(this.getStringFromValue(Array.get(value,index))).append(BuzzerSQLConstants.COMMA);
+                valStr.append(BuzzerSQLConstants.SPACE).append(this.getStringFromValue(Array.get(value,index))).append(BuzzerSQLConstants.SPACE).append(commaMarker);
             });
-            return valStr.substring(0,valStr.length()-1);
+            return valStr.substring(0,valStr.length()-commaMarker.length());
         }
         else if(value instanceof CharSequence)
         {
@@ -253,7 +257,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         {
             case BuzzerSQLConstants.SQLOperators.BETWEEN:
 
-              //  this.sql.append(BuzzerSQLConstants.START_BRACKET).append(StringUtils.trimToEmpty(value).replaceAll()).append(BuzzerSQLConstants.END_BRACKET);
+                this.sql.append(BuzzerSQLConstants.SPACE).append(StringUtils.trimToEmpty(value).replaceAll(BuzzerSQLConstants.REPLACE_COMMA_WITH_AND_REGEX,StringUtils.join(BuzzerSQLConstants.SPACE,BuzzerSQLConstants.AND,BuzzerSQLConstants.SPACE))).append(BuzzerSQLConstants.SPACE);
                 break;
             case BuzzerSQLConstants.SQLOperators.IN:
                 this.sql.append(BuzzerSQLConstants.START_BRACKET).append(StringUtils.trimToEmpty(value)).append(BuzzerSQLConstants.END_BRACKET);
