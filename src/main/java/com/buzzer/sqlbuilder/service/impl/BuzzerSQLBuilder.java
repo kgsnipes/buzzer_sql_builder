@@ -16,8 +16,6 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import static com.buzzer.sqlbuilder.util.BuzzerSQLConstants.REPLACE_COMMA_WITH_AND_REGEX;
-
 
 public class BuzzerSQLBuilder implements SQLBuilder {
 
