@@ -11,6 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 public class BuzzerMySQLBuilder extends BuzzerSQLBuilder implements SQLBuilder {
 
     public BuzzerMySQLBuilder() {
+        this.addToQueryTansformerSet();
+    }
+
+    private void addToQueryTansformerSet()
+    {
         queryTransformers.add(BuzzerAddAutoIncrementQueryTransformer.getInstance());
     }
 

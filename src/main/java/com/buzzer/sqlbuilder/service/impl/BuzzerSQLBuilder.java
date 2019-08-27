@@ -21,14 +21,18 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     protected StringBuilder sql=new StringBuilder();
-    protected List<QueryTransformer> queryTransformers=new ArrayList<>();
+    protected static Set<QueryTransformer> queryTransformers=new HashSet<>();
 
     public BuzzerSQLBuilder() {
+        this.addToQueryTansformerSet();
+    }
+
+    private void addToQueryTansformerSet()
+    {
         queryTransformers.add(BuzzerCreateTableQueryTransformer.getInstance());
         queryTransformers.add(BuzzerSQLMarkerRemoverQueryTransformer.getInstance());
         queryTransformers.add(BuzzerSQLSelectQueryTransformer.getInstance());
     }
-
 
     public SQLBuilder createDatabase(String database) throws BuzzerSQLBuilderException {
         throw new BuzzerSQLBuilderException("Not supported by Generic DB");
@@ -535,7 +539,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     }
 
     @Override
-    public List<QueryTransformer> getQueryTransformers() {
+    public Set<QueryTransformer> getQueryTransformers() {
         return this.queryTransformers;
     }
 

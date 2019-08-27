@@ -5,6 +5,7 @@ import com.buzzer.sqlbuilder.exception.BuzzerSQLBuilderException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This interface defines all the methods that are implemented for the sql builder API
@@ -85,7 +86,7 @@ public interface SQLBuilder {
 //    SQLBuilder rollbackToSavePoint(String savePoint)throws BuzzerSQLBuilderException;
 
     void addQueryTransformer(QueryTransformer queryTransformer);
-    List<QueryTransformer> getQueryTransformers();
+    Set<QueryTransformer> getQueryTransformers();
 
     //SQLBuilder batch();
     //SQLBuilder update();
