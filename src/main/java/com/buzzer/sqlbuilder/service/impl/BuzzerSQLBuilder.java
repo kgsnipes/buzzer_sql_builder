@@ -26,6 +26,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public BuzzerSQLBuilder() {
         queryTransformers.add(new BuzzerCreateTableQueryTransformer());
         queryTransformers.add(new BuzzerSQLMarkerRemoverQueryTransformer());
+        queryTransformers.add(new BuzzerSQLSelectQueryTransformer());
     }
 
 
@@ -181,6 +182,16 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
         this.addConditionToStatement(BuzzerSQLConstants.WHERE,operand,operator,getStringFromValue(value));
         return this;
+    }
+
+    @Override
+    public SQLBuilder limit(Long offset, Long limit) throws BuzzerSQLBuilderException {
+        throw new BuzzerSQLBuilderException("limit call is database engine specific");
+    }
+
+    @Override
+    public SQLBuilder limit(Long limit) throws BuzzerSQLBuilderException {
+        throw new BuzzerSQLBuilderException("limit call is database engine specific");
     }
 
 

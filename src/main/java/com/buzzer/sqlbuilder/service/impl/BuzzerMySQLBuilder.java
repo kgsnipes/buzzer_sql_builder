@@ -73,5 +73,28 @@ public class BuzzerMySQLBuilder extends BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
+    @Override
+    public SQLBuilder limit(Long limit) throws BuzzerSQLBuilderException {
+        return this.limit(limit, null);
+    }
+
+    @Override
+    public SQLBuilder limit(Long limit, Long offset) throws BuzzerSQLBuilderException {
+        if(ObjectUtils.isEmpty(limit) && limit<=0l)
+        {
+            throw new BuzzerSQLBuilderException("need valid values for limit");
+        }
+        this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.LIMIT).append(BuzzerSQLConstants.SPACE);
+        if(ObjectUtils.isEmpty(offset))
+        {
+            this.sql.append(limit.toString());
+        }
+        else
+        {
+            this.sql.append(BuzzerSQLConstants.SPACE).append(limit.toString()).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.COMMA).append(BuzzerSQLConstants.SPACE).append(offset.toString()).append(BuzzerSQLConstants.SPACE);
+        }
+        return this;
+    }
+
 
 }

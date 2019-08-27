@@ -105,6 +105,7 @@ public class BuzzerMySQLBuilderTest {
                 .and("email",BuzzerSQLConstants.SQLOperators.LIKE,"%@gmail.com")
                 .or("name",BuzzerSQLConstants.SQLOperators.LIKE,"randy%")
                 .and("age",BuzzerSQLConstants.SQLOperators.BETWEEN,new String[]{"hello","world"})
+                .limit(10l,190890l)
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);

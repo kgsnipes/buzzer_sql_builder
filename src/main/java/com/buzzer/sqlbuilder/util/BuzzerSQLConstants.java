@@ -47,7 +47,7 @@ public interface BuzzerSQLConstants {
     String BETWEEN="BETWEEN";
     String UNION="UNION";
     String UNION_ALL="UNION ALL";
-
+    String LIMIT="LIMIT";
 
     String UPDATE="UPDATE";
 
