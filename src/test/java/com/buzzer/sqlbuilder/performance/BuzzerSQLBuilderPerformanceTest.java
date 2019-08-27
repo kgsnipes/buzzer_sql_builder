@@ -2,11 +2,13 @@ package com.buzzer.sqlbuilder.performance;
 
 import com.buzzer.sqlbuilder.BuzzerDBType;
 
+import com.buzzer.sqlbuilder.dto.DateValue;
 import com.buzzer.sqlbuilder.service.impl.BuzzerSQLBuilder;
 import com.buzzer.sqlbuilder.service.impl.BuzzerSQLBuilderFactoryImpl;
+import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Seconds;
+
 import org.junit.Before;
 import org.junit.Test;
 import sun.jvm.hotspot.utilities.Assert;
@@ -30,8 +32,9 @@ public class BuzzerSQLBuilderPerformanceTest {
     @Test
     public void createTableTest()throws Exception
     {
-        DateTime startTime=new DateTime(new Date());
-        for(int i=0;i<1000;i++)
+        StopWatch watch = new StopWatch();
+        watch.start();
+        for(int i=0;i<10000;i++)
         {
             sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
             String sql=sqlBuilder.createTable("ecom","customer",Boolean.TRUE)
@@ -45,32 +48,34 @@ public class BuzzerSQLBuilderPerformanceTest {
                     .toString();
         }
 
-        DateTime endTime=new DateTime(new Date());
-        int timeTaken= Seconds.secondsBetween(startTime,endTime).getSeconds();
-        LOG.info("Execution time seconds - "+ timeTaken);
+        watch.stop();
+        LOG.info("Execution time milliseconds - "+ watch.getTime());
+        LOG.info("Execution time seconds - "+ (watch.getTime()/1000));
         Assert.that(Boolean.TRUE,"Execution finished.");
     }
 
     @Test
     public void dropTableTest()throws Exception
     {
-        DateTime startTime=new DateTime(new Date());
+        StopWatch watch = new StopWatch();
+        watch.start();
         for(int i=0;i<1000;i++)
         {
             sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
             String sql=sqlBuilder.dropTable("ecom","customer").toString();
         }
 
-        DateTime endTime=new DateTime(new Date());
-        int timeTaken= Seconds.secondsBetween(startTime,endTime).getSeconds();
-        LOG.info("Execution time seconds - "+ timeTaken);
+        watch.stop();
+        LOG.info("Execution time milliseconds - "+ watch.getTime());
+        LOG.info("Execution time seconds - "+ (watch.getTime()/1000));
         Assert.that(Boolean.TRUE,"Execution finished.");
     }
 
     @Test
     public void selectAllQueryTest()throws Exception
     {
-        DateTime startTime=new DateTime(new Date());
+        StopWatch watch = new StopWatch();
+        watch.start();
         for(int i=0;i<1000;i++)
         {
             sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
@@ -78,9 +83,34 @@ public class BuzzerSQLBuilderPerformanceTest {
                 .toString();
         }
 
-        DateTime endTime=new DateTime(new Date());
-        int timeTaken= Seconds.secondsBetween(startTime,endTime).getSeconds();
-        LOG.info("Execution time seconds - "+ timeTaken);
+        watch.stop();
+        LOG.info("Execution time milliseconds - "+ watch.getTime());
+        LOG.info("Execution time seconds - "+ (watch.getTime()/1000));
+        Assert.that(Boolean.TRUE,"Execution finished.");
+
+    }
+
+
+    @Test
+    public void selectWithColumnsQueryTest()throws Exception
+    {
+        StopWatch watch = new StopWatch();
+        watch.start();
+        for(int i=0;i<1000;i++)
+        {
+        String sql=sqlBuilder.selectColumns(new String[]{"email","name","age"}).fromTable("ecom.customers","current_customers")
+                .where("dob", BuzzerSQLConstants.SQLOperators.GE, DateValue.create(new Date(),BuzzerSQLConstants.DateFormats.SQL.DATETIME))
+                .and("email",BuzzerSQLConstants.SQLOperators.LIKE,"%@gmail.com")
+                .or("name",BuzzerSQLConstants.SQLOperators.LIKE,"randy%")
+                .and("age",BuzzerSQLConstants.SQLOperators.BETWEEN,new String[]{"hello","world"})
+                .limit(10l,190890l)
+                .toString();
+
+        }
+
+        watch.stop();
+        LOG.info("Execution time milliseconds - "+ watch.getTime());
+        LOG.info("Execution time seconds - "+ (watch.getTime()/1000));
         Assert.that(Boolean.TRUE,"Execution finished.");
 
     }

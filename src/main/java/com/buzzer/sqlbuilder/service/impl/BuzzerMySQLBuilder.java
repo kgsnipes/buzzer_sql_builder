@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 public class BuzzerMySQLBuilder extends BuzzerSQLBuilder implements SQLBuilder {
 
     public BuzzerMySQLBuilder() {
-        queryTransformers.add(new BuzzerAddAutoIncrementQueryTransformer());
+        queryTransformers.add(BuzzerAddAutoIncrementQueryTransformer.getInstance());
     }
 
     public SQLBuilder createDatabase(String database)throws BuzzerSQLBuilderException {

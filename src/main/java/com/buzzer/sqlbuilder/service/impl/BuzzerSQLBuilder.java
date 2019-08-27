@@ -24,9 +24,9 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     protected List<QueryTransformer> queryTransformers=new ArrayList<>();
 
     public BuzzerSQLBuilder() {
-        queryTransformers.add(new BuzzerCreateTableQueryTransformer());
-        queryTransformers.add(new BuzzerSQLMarkerRemoverQueryTransformer());
-        queryTransformers.add(new BuzzerSQLSelectQueryTransformer());
+        queryTransformers.add(BuzzerCreateTableQueryTransformer.getInstance());
+        queryTransformers.add(BuzzerSQLMarkerRemoverQueryTransformer.getInstance());
+        queryTransformers.add(BuzzerSQLSelectQueryTransformer.getInstance());
     }
 
 

@@ -2,13 +2,15 @@ package com.buzzer.sqlbuilder.service.impl;
 
 import com.buzzer.sqlbuilder.service.QueryTransformer;
 import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
-import com.buzzer.sqlbuilder.util.BuzzerUtil;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.RegExUtils;
 
 import java.util.List;
 
 public class BuzzerAddAutoIncrementQueryTransformer implements QueryTransformer {
+
+    private static BuzzerAddAutoIncrementQueryTransformer instance;
+    private BuzzerAddAutoIncrementQueryTransformer(){}
+
     @Override
     public StringBuilder transform(StringBuilder sql) {
         int autoIncrementFlagIndex=sql.indexOf(BuzzerSQLConstants.MYSQL_AUTOINCREMENT_VALUE_FLAG);
@@ -23,5 +25,14 @@ public class BuzzerAddAutoIncrementQueryTransformer implements QueryTransformer 
         }
 
         return sql;
+    }
+
+
+    public static QueryTransformer getInstance() {
+        if(ObjectUtils.isEmpty(instance))
+        {
+            instance=new BuzzerAddAutoIncrementQueryTransformer();
+        }
+        return instance;
     }
 }
