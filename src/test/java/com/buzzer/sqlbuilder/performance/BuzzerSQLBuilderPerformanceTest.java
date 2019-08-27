@@ -96,9 +96,10 @@ public class BuzzerSQLBuilderPerformanceTest {
     {
         StopWatch watch = new StopWatch();
         watch.start();
-        for(int i=0;i<1000;i++)
+        for(int i=0;i<10000;i++)
         {
-        String sql=sqlBuilder.selectColumns(new String[]{"email","name","age"}).fromTable("ecom.customers","current_customers")
+            sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+            String sql=sqlBuilder.selectColumns(new String[]{"email","name","age"}).fromTable("ecom.customers","current_customers")
                 .where("dob", BuzzerSQLConstants.SQLOperators.GE, DateValue.create(new Date(),BuzzerSQLConstants.DateFormats.SQL.DATETIME))
                 .and("email",BuzzerSQLConstants.SQLOperators.LIKE,"%@gmail.com")
                 .or("name",BuzzerSQLConstants.SQLOperators.LIKE,"randy%")
