@@ -25,6 +25,7 @@ public interface BuzzerSQLConstants {
     String SINGLE_QUOTE="'";
 
     String ASTERISK="*";
+    String POSITIONAL_PARAMETER="?";
 
     String SELECT="SELECT";
     String FROM="FROM";

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -167,24 +168,29 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder and(String operand, String operator, Object value) throws BuzzerSQLBuilderException{
-        this.isSelectOrUpdateStatementValidation();
-        this.addConditionToStatement(BuzzerSQLConstants.AND,operand,operator,getStringFromValue(value));
+        if(this.isSelectStatementValidation() || this.isUpadateStatementValidation())
+        {
+            this.addConditionToStatement(BuzzerSQLConstants.AND,operand,operator,getStringFromValue(value));
+        }
         return this;
     }
 
 
     public SQLBuilder or(String operand, String operator, Object value)throws BuzzerSQLBuilderException {
-        this.isSelectOrUpdateStatementValidation();
-        this.addConditionToStatement(BuzzerSQLConstants.OR,operand,operator,getStringFromValue(value));
+        if(this.isSelectStatementValidation() || this.isUpadateStatementValidation())
+        {
+            this.addConditionToStatement(BuzzerSQLConstants.OR,operand,operator,getStringFromValue(value));
+        }
         return this;
     }
 
 
     public SQLBuilder where(String operand, String operator, Object value)throws BuzzerSQLBuilderException {
 
-        this.isSelectOrUpdateStatementValidation();
-
-        this.addConditionToStatement(BuzzerSQLConstants.WHERE,operand,operator,getStringFromValue(value));
+        if(this.isSelectStatementValidation() || this.isUpadateStatementValidation())
+        {
+            this.addConditionToStatement(BuzzerSQLConstants.WHERE,operand,operator,getStringFromValue(value));
+        }
         return this;
     }
 
@@ -240,7 +246,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return valStr.toString();
     }
 
-    protected void isSelectOrUpdateStatementValidation()throws BuzzerSQLBuilderException
+    protected boolean isSelectStatementValidation()throws BuzzerSQLBuilderException
     {
         boolean isValid=false;
         if(this.sql.indexOf(BuzzerSQLConstants.SELECT)==-1)
@@ -252,10 +258,22 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             isValid=true;
         }
 
-        if(this.sql.indexOf(BuzzerSQLConstants.UPDATE)==-1 && !isValid)
+        return isValid;
+    }
+
+    protected boolean isUpadateStatementValidation()throws BuzzerSQLBuilderException
+    {
+        boolean isValid=false;
+        if(this.sql.indexOf(BuzzerSQLConstants.UPDATE)==-1)
         {
             throw new BuzzerSQLBuilderException("the inner query needs to be a select statement or update statement");
         }
+        else
+        {
+            isValid=true;
+        }
+
+        return isValid;
     }
 
     protected void addConditionToStatement(String condition,String operand, String operator, String value)throws BuzzerSQLBuilderException
@@ -284,26 +302,41 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder groupBy(String[] columns)throws BuzzerSQLBuilderException {
+        if(isSelectStatementValidation() && ObjectUtils.isNotEmpty(columns))
+        {
+            this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.GROUP_BY).append(BuzzerSQLConstants.SPACE);
+            this.sql.append(StringUtils.join(columns,BuzzerSQLConstants.COMMA));
+        }
         return this;
     }
 
     @Override
     public SQLBuilder groupBy(Column... columns) throws BuzzerSQLBuilderException {
-        return this;
+
+        return this.groupBy(columns);
     }
 
 
     public SQLBuilder orderBy(String[] columns)throws BuzzerSQLBuilderException {
+        if(isSelectStatementValidation() && ObjectUtils.isNotEmpty(columns))
+        {
+            this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.ORDER_BY).append(BuzzerSQLConstants.SPACE);
+            this.sql.append(StringUtils.join(columns,BuzzerSQLConstants.COMMA));
+        }
         return this;
     }
 
     @Override
     public SQLBuilder orderBy(Column... columns) throws BuzzerSQLBuilderException {
-        return null;
+        return this.orderBy(columns);
     }
 
 
     public SQLBuilder positionalParameters(List parameters)throws BuzzerSQLBuilderException {
+        String []sqlToReplace=this.sql.toString().split(BuzzerSQLConstants.POSITIONAL_PARAMETER);
+
+        this.sql=new StringBuilder(IntStream.range(0,StringUtils.countMatches(sqlToReplace,BuzzerSQLConstants.POSITIONAL_PARAMETER)).map(index->StringUtils.replaceOnce(sqlToReplace,BuzzerSQLConstants.POSITIONAL_PARAMETER,getStringFromValue(parameters.get(index)))).collect(Collectors.joining()));
+
         return this;
     }
 
