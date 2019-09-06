@@ -12,9 +12,7 @@ import org.junit.Test;
 import sun.jvm.hotspot.utilities.Assert;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class BuzzerMySQLBuilderTest {
@@ -100,12 +98,20 @@ public class BuzzerMySQLBuilderTest {
     @Test
     public void selectWithColumnsQueryTest()throws Exception
     {
+        Map<String,Object> namedParams=new HashMap<>();
+        namedParams.put("country","india");
+        namedParams.put("state","TN");
         String sql=sqlBuilder.selectColumns(new String[]{"email","name","age"}).fromTable("ecom.customers","current_customers")
                 .where("dob", BuzzerSQLConstants.SQLOperators.GE,DateValue.create(new Date(),BuzzerSQLConstants.DateFormats.SQL.DATETIME))
                 .and("email",BuzzerSQLConstants.SQLOperators.LIKE,"%@gmail.com")
                 .or("name",BuzzerSQLConstants.SQLOperators.LIKE,"randy%")
                 .and("age",BuzzerSQLConstants.SQLOperators.BETWEEN,new String[]{"hello","world"})
+                .and("city",BuzzerSQLConstants.SQLOperators.EQ,"?")
+                .and("country",BuzzerSQLConstants.SQLOperators.EQ,"?country")
+                .and("state",BuzzerSQLConstants.SQLOperators.EQ,"?state")
                 .limit(10l,190890l)
+                .positionalParameters(Arrays.asList(new String[]{"radiocity","chennai"}))
+                .namedParameters(namedParams)
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);

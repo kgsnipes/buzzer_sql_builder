@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -231,7 +230,15 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         }
         else if(value instanceof CharSequence)
         {
-            valStr.append(BuzzerSQLConstants.SINGLE_QUOTE).append(StringUtils.trimToEmpty(value.toString())).append(BuzzerSQLConstants.SINGLE_QUOTE);
+            String strValue= (String) value;
+            if(strValue.indexOf(BuzzerSQLConstants.POSITIONAL_PARAMETER)!=-1 && strValue.indexOf(BuzzerSQLConstants.POSITIONAL_PARAMETER)==0)
+            {
+                valStr.append(StringUtils.trimToEmpty(value.toString()));
+            }
+            else
+            {
+                valStr.append(BuzzerSQLConstants.SINGLE_QUOTE).append(StringUtils.trimToEmpty(value.toString())).append(BuzzerSQLConstants.SINGLE_QUOTE);
+            }
         }
         else if(value instanceof  Boolean)
         {
@@ -333,15 +340,29 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder positionalParameters(List parameters)throws BuzzerSQLBuilderException {
-        String []sqlToReplace=this.sql.toString().split(BuzzerSQLConstants.POSITIONAL_PARAMETER);
-
-        this.sql=new StringBuilder(IntStream.range(0,StringUtils.countMatches(sqlToReplace,BuzzerSQLConstants.POSITIONAL_PARAMETER)).map(index->StringUtils.replaceOnce(sqlToReplace,BuzzerSQLConstants.POSITIONAL_PARAMETER,getStringFromValue(parameters.get(index)))).collect(Collectors.joining()));
-
+        int count=0;
+        int index=-1;
+        while((index=this.sql.indexOf(StringUtils.join(BuzzerSQLConstants.SPACE,BuzzerSQLConstants.POSITIONAL_PARAMETER,BuzzerSQLConstants.SPACE)))!=-1)
+        {
+            this.sql.replace(index,index+2,"");
+            this.sql.insert(index,getStringFromValue(parameters.get(count)));
+            count++;
+            index=-1;
+        }
         return this;
     }
 
 
-    public SQLBuilder namedParameters(Map parameters)throws BuzzerSQLBuilderException {
+    public SQLBuilder namedParameters(Map<String,Object> parameters)throws BuzzerSQLBuilderException {
+        parameters.forEach((key,value)->{
+            int index=this.sql.indexOf(StringUtils.join(BuzzerSQLConstants.POSITIONAL_PARAMETER,key));
+            if(index!=-1)
+            {
+                this.sql.replace(index,index+key.length()+1,"");
+                this.sql.insert(index,getStringFromValue(value));
+            }
+            index=-1;
+        });
         return this;
     }
 

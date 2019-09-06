@@ -59,7 +59,7 @@ public interface SQLBuilder {
     SQLBuilder orderBy(String []columns)throws BuzzerSQLBuilderException;
     SQLBuilder orderBy(Column ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder positionalParameters(List parameters)throws BuzzerSQLBuilderException;
-    SQLBuilder namedParameters(Map parameters)throws BuzzerSQLBuilderException;
+    SQLBuilder namedParameters(Map<String,Object> parameters)throws BuzzerSQLBuilderException;
 
 
     SQLBuilder createTable(String schema,String tableName)throws BuzzerSQLBuilderException;
