@@ -13,7 +13,10 @@ import org.junit.Before;
 import org.junit.Test;
 import sun.jvm.hotspot.utilities.Assert;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BuzzerSQLBuilderPerformanceTest {
 
@@ -99,19 +102,27 @@ public class BuzzerSQLBuilderPerformanceTest {
         for(int i=0;i<10000;i++)
         {
             sqlBuilder= (BuzzerSQLBuilder) factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+            Map<String,Object> namedParams=new HashMap<>();
+            namedParams.put("country","india");
+            namedParams.put("state","TN");
             String sql=sqlBuilder.selectColumns(new String[]{"email","name","age"}).fromTable("ecom.customers","current_customers")
-                .where("dob", BuzzerSQLConstants.SQLOperators.GE, DateValue.create(new Date(),BuzzerSQLConstants.DateFormats.SQL.DATETIME))
-                .and("email",BuzzerSQLConstants.SQLOperators.LIKE,"%@gmail.com")
-                .or("name",BuzzerSQLConstants.SQLOperators.LIKE,"randy%")
-                .and("age",BuzzerSQLConstants.SQLOperators.BETWEEN,new String[]{"hello","world"})
-                .limit(10l,190890l)
-                .toString();
+                    .where("dob", BuzzerSQLConstants.SQLOperators.GE,DateValue.create(new Date(),BuzzerSQLConstants.DateFormats.SQL.DATETIME))
+                    .and("email",BuzzerSQLConstants.SQLOperators.LIKE,"%@gmail.com")
+                    .or("name",BuzzerSQLConstants.SQLOperators.LIKE,"randy%")
+                    .and("age",BuzzerSQLConstants.SQLOperators.BETWEEN,new String[]{"hello","world"})
+                    .and("city",BuzzerSQLConstants.SQLOperators.EQ,"?")
+                    .and("country",BuzzerSQLConstants.SQLOperators.EQ,"?country")
+                    .and("state",BuzzerSQLConstants.SQLOperators.EQ,"?state")
+                    .limit(10l,190890l)
+                    .positionalParameters(Arrays.asList(new String[]{"radiocity","chennai"}))
+                    .namedParameters(namedParams)
+                    .toString();
 
         }
 
         watch.stop();
         LOG.info("Execution time milliseconds - "+ watch.getTime());
-        LOG.info("Execution time seconds - "+ (watch.getTime()/1000));
+        LOG.info("Execution time seconds - "+ (watch.getTime()/1000.0f));
         Assert.that(Boolean.TRUE,"Execution finished.");
 
     }

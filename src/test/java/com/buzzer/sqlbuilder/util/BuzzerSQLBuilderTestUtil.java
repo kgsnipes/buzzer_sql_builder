@@ -17,6 +17,7 @@ public class BuzzerSQLBuilderTestUtil {
     {
         CharSink chs = Files.asCharSink(f, Charsets.UTF_8, FileWriteMode.APPEND);
         try {
+            chs.write(BuzzerSQLConstants.NEW_LINE);
             chs.write(text);
         } catch (IOException e) {
             LOG.error("Exception while writing to file ",e);
