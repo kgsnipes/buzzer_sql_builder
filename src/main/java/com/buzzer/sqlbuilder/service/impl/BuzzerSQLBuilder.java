@@ -597,6 +597,16 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         return this.queryTransformers;
     }
 
+    @Override
+    public SQLBuilder insertTo(String tableName) {
+        return null;
+    }
+
+    @Override
+    public SQLBuilder withValues(Object... values) {
+        return null;
+    }
+
 
     public String toStringOmitSemiColon() {
         String sqlStatement=toString();
@@ -654,5 +664,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     protected void throwExceptionForNewBuilder()throws BuzzerSQLBuilderException
     {
         throw new BuzzerSQLBuilderException("create a new builder instance");
+    }
+
+    private boolean isCreateOrInsertStatement()
+    {
+        boolean isCreateStatement=
     }
 }

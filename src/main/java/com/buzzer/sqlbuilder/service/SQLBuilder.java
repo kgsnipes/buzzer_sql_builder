@@ -91,8 +91,8 @@ public interface SQLBuilder {
     //SQLBuilder batch();
     //SQLBuilder update();
 
-    //SQLBuilder insert(String tableName);
-    //SQLBuilder withValues(Object []values);
+    SQLBuilder insertTo(String tableName);
+    SQLBuilder withValues(Object...values);
 
     String toStringOmitSemiColon();
 
