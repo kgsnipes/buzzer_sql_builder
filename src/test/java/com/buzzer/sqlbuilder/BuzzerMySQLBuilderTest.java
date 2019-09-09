@@ -154,6 +154,16 @@ public class BuzzerMySQLBuilderTest {
     }
 
 
+    @Test
+    public void insertWithColumnsTest()throws Exception
+    {
 
+        String sql=sqlBuilder.insertTo("ecom.customers").withColumns("name","age","city")
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        sqlGenerated.add(sql);
+        Assert.that(sql.contains("ecom.customers"),"name of the table is available");
+
+    }
 
 }

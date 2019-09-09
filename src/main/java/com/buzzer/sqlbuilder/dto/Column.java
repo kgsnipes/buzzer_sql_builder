@@ -12,6 +12,11 @@ public class Column extends BuzzerBean {
 
     public Column(){}
 
+    public Column(String name){
+        this.setName(name);
+
+    }
+
     public Column(String name,String aliasName){
         this.setName(name);
         this.aliasName=aliasName;

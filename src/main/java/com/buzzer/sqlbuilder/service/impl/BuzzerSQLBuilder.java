@@ -14,7 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 
 
 public class BuzzerSQLBuilder implements SQLBuilder {
@@ -31,7 +33,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     {
         queryTransformers.add(BuzzerCreateTableQueryTransformer.getInstance());
         queryTransformers.add(BuzzerSQLMarkerRemoverQueryTransformer.getInstance());
-        queryTransformers.add(BuzzerSQLSelectQueryTransformer.getInstance());
+        queryTransformers.add(BuzzerSQLEOSQueryTransformer.getInstance());
     }
 
     public SQLBuilder createDatabase(String database) throws BuzzerSQLBuilderException {
@@ -404,23 +406,74 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder withColumns(Column... columns)throws BuzzerSQLBuilderException {
-        if(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)==-1)
+        if(!isCreateOrInsertStatement())
         {
-            throw new BuzzerSQLBuilderException("first call the create table method");
+            throw new BuzzerSQLBuilderException("first call the create/insert table method");
         }
+        if(isCreateStatement())
+        {
+            handleCreateStatementWithColumns(columns);
+        }
+        else if(isInsertStatement())
+        {
+            handleInsertStatementWithColumns();
+        }
+
+        return this;
+    }
+
+    public SQLBuilder withColumns(String ... columns)throws BuzzerSQLBuilderException {
+        if(ObjectUtils.isEmpty(columns))
+        {
+            throw new BuzzerSQLBuilderException("columns cannot be empty");
+        }
+        if(isInsertStatement())
+        {
+            List<Column> columnList=new ArrayList<>();
+             Arrays.stream(columns).filter(col->!StringUtils.isEmpty(col)).forEach(col->columnList.add(new Column(col)));
+             withColumns(columnList);
+        }
+        else
+        {
+            throw new BuzzerSQLBuilderException("call this method only for insert statement");
+        }
+
+        return this;
+    }
+
+    public SQLBuilder withColumns(List<Column> columns)throws BuzzerSQLBuilderException
+    {
+        if(ObjectUtils.isEmpty(columns))
+        {
+            throw new BuzzerSQLBuilderException("columns cannot be empty");
+        }
+        Column cols[]=new Column[columns.size()];
+        IntStream.range(0,columns.size()).forEach(i->cols[i]=columns.get(i));
+        withColumns(cols);
+        return this;
+    }
+
+    protected void handleCreateStatementWithColumns(Column ...columns)throws BuzzerSQLBuilderException
+    {
         this.validateColumns(columns);
         Arrays.stream(columns).forEach(c->{
             this.sql.insert(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER),this.getSQLForColumn(c));
         });
-        return this;
+    }
+    protected void handleInsertStatementWithColumns(Column ...columns)throws BuzzerSQLBuilderException
+    {
+
+        this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.START_BRACKET);
+        List<String> columnNames=new ArrayList<>();
+        Arrays.stream(columns).forEach(c->{
+            columnNames.add(c.getName());
+        });
+        this.sql.append(StringUtils.join(columnNames,StringUtils.join(BuzzerSQLConstants.SPACE,BuzzerSQLConstants.COMMA,BuzzerSQLConstants.SPACE)))
+                .append(BuzzerSQLConstants.END_BRACKET).append(BuzzerSQLConstants.SPACE);
     }
 
-
     public SQLBuilder withColumn(String name, String dataType, String spec, Boolean isNull, Boolean isUnique, Object defaultValue, Boolean isAutoIncrement) throws BuzzerSQLBuilderException {
-        if(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)==-1)
-        {
-            throw new BuzzerSQLBuilderException("first call the create table method");
-        }
+
         Column c=new Column();
         c.setName(name);
         c.setDataType(dataType);
@@ -428,8 +481,9 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         c.setUnique(isUnique);
         c.setNull(isNull);
         c.setAutoIncrement(isAutoIncrement);
-        this.validateColumn(c);
-        this.sql.insert(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER),this.getSQLForColumn(c));
+        this.withColumns(c);
+        //this.validateColumn(c);
+        //this.sql.insert(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER),this.getSQLForColumn(c));
         return this;
     }
 
@@ -551,7 +605,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     }
 
 
-    private String getSQLForColumn(Column c) {
+    protected String getSQLForColumn(Column c) {
 
         StringBuilder columnSql=new StringBuilder();
         columnSql.append(BuzzerSQLConstants.NEW_LINE);
@@ -598,13 +652,26 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     }
 
     @Override
-    public SQLBuilder insertTo(String tableName) {
-        return null;
+    public SQLBuilder insertTo(String tableName)throws BuzzerSQLBuilderException {
+        if(StringUtils.isEmpty(tableName))
+        {
+            throw new BuzzerSQLBuilderException("table name cannot be empty or null");
+        }
+        this.sql.append(BuzzerSQLConstants.INSERT_INTO).append(BuzzerSQLConstants.SPACE).append(tableName.trim()).append(BuzzerSQLConstants.SPACE);
+        return this;
     }
 
     @Override
-    public SQLBuilder withValues(Object... values) {
-        return null;
+    public SQLBuilder withValues(Object... values)throws BuzzerSQLBuilderException {
+        if(ObjectUtils.isEmpty(values))
+        {
+            throw new BuzzerSQLBuilderException("values cannot be empty or null");
+        }
+        List<String> insertValues=Arrays.stream(values).filter(v->ObjectUtils.isNotEmpty(v)).map(v->getStringFromValue(v)).collect(Collectors.toList());
+        this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.START_BRACKET);
+        this.sql.append(StringUtils.join(insertValues,BuzzerSQLConstants.COMMA));
+        this.sql.append(BuzzerSQLConstants.END_BRACKET).append(BuzzerSQLConstants.SPACE);
+        return this;
     }
 
 
@@ -666,8 +733,20 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         throw new BuzzerSQLBuilderException("create a new builder instance");
     }
 
-    private boolean isCreateOrInsertStatement()
+    protected boolean isCreateOrInsertStatement()
     {
-        boolean isCreateStatement=
+        boolean isCreateStatement=isCreateStatement();
+        boolean isInsertStatement=isInsertStatement();
+        return isCreateStatement || isInsertStatement;
+    }
+
+    protected boolean isCreateStatement()
+    {
+        return (this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE)!=-1);
+    }
+    protected boolean isInsertStatement()
+    {
+        return (this.sql.indexOf(BuzzerSQLConstants.INSERT_INTO)!=-1);
+
     }
 }

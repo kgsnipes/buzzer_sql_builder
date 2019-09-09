@@ -65,6 +65,8 @@ public interface SQLBuilder {
     SQLBuilder createTable(String schema,String tableName)throws BuzzerSQLBuilderException;
     SQLBuilder createTable(String schema,String tableName,Boolean dropIfExists)throws BuzzerSQLBuilderException;
     SQLBuilder withColumns(Column ...columns)throws BuzzerSQLBuilderException;
+    SQLBuilder withColumns(List<Column> columns)throws BuzzerSQLBuilderException;
+    SQLBuilder withColumns(String ...columns)throws BuzzerSQLBuilderException;
     SQLBuilder withColumn(String name,String dataType,String spec,Boolean isNull,Boolean isUnique,Object defaultValue,Boolean isAutoIncrement)throws BuzzerSQLBuilderException;
     SQLBuilder withAutoIncrementValue(String column,Long startValue)throws BuzzerSQLBuilderException;
     SQLBuilder withIndexOnColumns(String indexName,String ...columns)throws BuzzerSQLBuilderException;
@@ -91,8 +93,8 @@ public interface SQLBuilder {
     //SQLBuilder batch();
     //SQLBuilder update();
 
-    SQLBuilder insertTo(String tableName);
-    SQLBuilder withValues(Object...values);
+    SQLBuilder insertTo(String tableName)throws BuzzerSQLBuilderException;
+    SQLBuilder withValues(Object...values)throws BuzzerSQLBuilderException;
 
     String toStringOmitSemiColon();
 

@@ -4,15 +4,16 @@ import com.buzzer.sqlbuilder.service.QueryTransformer;
 import com.buzzer.sqlbuilder.util.BuzzerSQLConstants;
 import org.apache.commons.lang3.ObjectUtils;
 
-public class BuzzerSQLSelectQueryTransformer implements com.buzzer.sqlbuilder.service.QueryTransformer {
+public class BuzzerSQLEOSQueryTransformer implements com.buzzer.sqlbuilder.service.QueryTransformer {
 
-    private static BuzzerSQLSelectQueryTransformer instance;
-    private BuzzerSQLSelectQueryTransformer(){}
+    private static BuzzerSQLEOSQueryTransformer instance;
+    private BuzzerSQLEOSQueryTransformer(){}
 
 
     @Override
     public StringBuilder transform(StringBuilder sql) {
-        if(sql.indexOf(BuzzerSQLConstants.END_STATEMENT)!=sql.length()-1)
+        String sqlStr=sql.toString().trim();
+        if(sqlStr.indexOf(BuzzerSQLConstants.END_STATEMENT)!=sqlStr.length()-1)
         {
             sql.append(BuzzerSQLConstants.END_STATEMENT);
         }
@@ -23,7 +24,7 @@ public class BuzzerSQLSelectQueryTransformer implements com.buzzer.sqlbuilder.se
     public static QueryTransformer getInstance() {
         if(ObjectUtils.isEmpty(instance))
         {
-            instance=new BuzzerSQLSelectQueryTransformer();
+            instance=new BuzzerSQLEOSQueryTransformer();
         }
         return instance;
     }
