@@ -158,7 +158,7 @@ public class BuzzerMySQLBuilderTest {
     public void insertWithColumnsTest()throws Exception
     {
 
-        String sql=sqlBuilder.insertTo("ecom.customers").withColumns("name","age","city")
+        String sql=sqlBuilder.insertTo("ecom.customers").withColumns("name","age","city").withValues("kaushik",30,"Princeton")
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);

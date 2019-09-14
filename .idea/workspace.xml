@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dbc0620c-2e6f-46e4-9b9e-1e709bab4dc7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/dto/Column.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/dto/Column.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/SQLBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/SQLBuilder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLSelectQueryTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLEOSQueryTransformer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/util/BuzzerSQLConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/util/BuzzerSQLConstants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/BuzzerMySQLBuilderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/BuzzerMySQLBuilderTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -26,8 +21,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/SQLBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="67" column="81" lean-forward="true" selection-start-line="67" selection-start-column="4" selection-end-line="67" selection-end-column="81" />
+            <state relative-caret-position="315">
+              <caret line="96" column="19" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -35,18 +30,18 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="473" column="4" selection-start-line="473" selection-start-column="4" selection-end-line="473" selection-end-column="4" />
+            <state relative-caret-position="119">
+              <caret line="459" column="73" selection-start-line="459" selection-start-column="73" selection-end-line="459" selection-end-column="73" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#800#801#0" expanded="true" />
                 <element signature="e#846#847#0" expanded="true" />
-                <element signature="e#25058#25059#0" expanded="true" />
-                <element signature="e#25176#25177#0" expanded="true" />
-                <element signature="e#28437#28438#0" expanded="true" />
+                <element signature="e#25110#25111#0" expanded="true" />
+                <element signature="e#25228#25229#0" expanded="true" />
+                <element signature="e#28489#28490#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -128,11 +123,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/BuzzerMySQLBuilderTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="285">
-              <caret line="160" column="36" lean-forward="true" selection-start-line="160" selection-start-column="36" selection-end-line="160" selection-end-column="36" />
+              <caret line="160" column="62" lean-forward="true" selection-start-line="160" selection-start-column="62" selection-end-line="160" selection-end-column="62" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -220,10 +215,10 @@
         <option value="$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/performance/BuzzerSQLBuilderPerformanceTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/util/BuzzerSQLConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/dto/Column.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/BuzzerMySQLBuilderTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLSelectQueryTransformer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLEOSQueryTransformer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/SQLBuilder.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/BuzzerMySQLBuilderTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLBuilder.java" />
       </list>
     </option>
@@ -515,18 +510,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="BuzzerSQLBuilderPerformanceTest_selectWithColumnsQueryTest - 2019.09.05 at 21h 27m 00s.xml">
-      <configuration name="BuzzerSQLBuilderPerformanceTest.selectWithColumnsQueryTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="BuzzerMySQLBuilderTest_insertWithColumnsTest - 2019.09.09 at 08h 34m 27s.xml">
-      <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="BuzzerMySQLBuilderTest_insertWithColumnsTest - 2019.09.09 at 08h 35m 32s.xml">
-      <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="BuzzerMySQLBuilderTest_useDatabaseTest - 2019.09.09 at 08h 37m 06s.xml">
-      <configuration name="BuzzerMySQLBuilderTest.useDatabaseTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="BuzzerMySQLBuilderTest - 2019.09.09 at 09h 01m 08s.xml">
       <configuration name="BuzzerMySQLBuilderTest" configurationId="JUnit" />
     </history-entry>
@@ -543,6 +526,18 @@
       <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
     </history-entry>
     <history-entry file="BuzzerMySQLBuilderTest_insertWithColumnsTest - 2019.09.09 at 09h 48m 08s.xml">
+      <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BuzzerMySQLBuilderTest_insertWithColumnsTest - 2019.09.09 at 09h 50m 16s.xml">
+      <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BuzzerMySQLBuilderTest_insertWithColumnsTest - 2019.09.09 at 09h 52m 05s.xml">
+      <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BuzzerMySQLBuilderTest_insertWithColumnsTest - 2019.09.13 at 14h 05m 40s.xml">
+      <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BuzzerMySQLBuilderTest_insertWithColumnsTest - 2019.09.13 at 20h 43m 46s.xml">
       <configuration name="BuzzerMySQLBuilderTest.insertWithColumnsTest" configurationId="JUnit" />
     </history-entry>
   </component>
@@ -934,20 +929,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/BuzzerMySQLBuilderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="160" column="36" lean-forward="true" selection-start-line="160" selection-start-column="36" selection-end-line="160" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/SQLBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="67" column="81" lean-forward="true" selection-start-line="67" selection-start-column="4" selection-end-line="67" selection-end-column="81" />
+        <state relative-caret-position="315">
+          <caret line="96" column="19" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -956,15 +941,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/buzzer/sqlbuilder/service/impl/BuzzerSQLBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="473" column="4" selection-start-line="473" selection-start-column="4" selection-end-line="473" selection-end-column="4" />
+        <state relative-caret-position="119">
+          <caret line="459" column="73" selection-start-line="459" selection-start-column="73" selection-end-line="459" selection-end-column="73" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#800#801#0" expanded="true" />
             <element signature="e#846#847#0" expanded="true" />
-            <element signature="e#25058#25059#0" expanded="true" />
-            <element signature="e#25176#25177#0" expanded="true" />
-            <element signature="e#28437#28438#0" expanded="true" />
+            <element signature="e#25110#25111#0" expanded="true" />
+            <element signature="e#25228#25229#0" expanded="true" />
+            <element signature="e#28489#28490#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/buzzer/sqlbuilder/BuzzerMySQLBuilderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="160" column="62" lean-forward="true" selection-start-line="160" selection-start-column="62" selection-end-line="160" selection-end-column="62" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -416,7 +416,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         }
         else if(isInsertStatement())
         {
-            handleInsertStatementWithColumns();
+            handleInsertStatementWithColumns(columns);
         }
 
         return this;
@@ -456,9 +456,8 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     protected void handleCreateStatementWithColumns(Column ...columns)throws BuzzerSQLBuilderException
     {
         this.validateColumns(columns);
-        Arrays.stream(columns).forEach(c->{
-            this.sql.insert(this.sql.indexOf(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER),this.getSQLForColumn(c));
-        });
+        List<String> cols=Arrays.stream(columns).filter(column -> StringUtils.isNotEmpty(column.getName())).map(c->c.getName()).collect(Collectors.toList());
+        this.sql.append(StringUtils.join(cols,BuzzerSQLConstants.COMMA));
     }
     protected void handleInsertStatementWithColumns(Column ...columns)throws BuzzerSQLBuilderException
     {
