@@ -75,7 +75,6 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public SQLBuilder selectColumns(String[] columns, String[] aliasNames, Boolean useDistinct)throws BuzzerSQLBuilderException {
-
         Column []cols=new Column[columns.length];
         if(ObjectUtils.isEmpty(columns) ||(ObjectUtils.isNotEmpty(columns) && ObjectUtils.isNotEmpty(aliasNames) && columns.length!=aliasNames.length))
         {
@@ -162,7 +161,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         {
             throw new BuzzerSQLBuilderException("the inner query needs to be a select statement");
         }
-        this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.START_BRACKET).append(queryBuilder.toStringOmitSemiColon()).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.END_BRACKET).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.AS).append(StringUtils.trim(aliasName));
+        this.sql.append(BuzzerSQLConstants.FROM).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.START_BRACKET).append(queryBuilder.toStringOmitSemiColon()).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.END_BRACKET).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.AS).append(BuzzerSQLConstants.SPACE).append(StringUtils.trim(aliasName));
         this.sql.append(BuzzerSQLConstants.SPACE);
         return this;
     }
@@ -675,8 +674,12 @@ public class BuzzerSQLBuilder implements SQLBuilder {
 
 
     public String toStringOmitSemiColon() {
-        String sqlStatement=toString();
-        return sqlStatement.substring(0,sqlStatement.length()-1);
+        String sqlStatement=toString().trim();
+        if(sqlStatement.endsWith(BuzzerSQLConstants.END_STATEMENT))
+        {
+            return sqlStatement.substring(0,sqlStatement.lastIndexOf(BuzzerSQLConstants.END_STATEMENT));
+        }
+        return sqlStatement;
     }
 
     @Override

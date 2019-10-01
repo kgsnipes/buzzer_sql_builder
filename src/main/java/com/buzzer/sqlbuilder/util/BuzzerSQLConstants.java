@@ -15,7 +15,7 @@ public interface BuzzerSQLConstants {
     String NOT_NULL="NOT NULL";
     String AUTO_INCREMENT_FLAG="AUTO_INCREMENT";
     String UNIQUE_FLAG="UNIQUE";
-    String END_STATEMENT="; ";
+    String END_STATEMENT=";";
     String COMMA=",";
     String PERIOD=".";
     String EMPTY="";

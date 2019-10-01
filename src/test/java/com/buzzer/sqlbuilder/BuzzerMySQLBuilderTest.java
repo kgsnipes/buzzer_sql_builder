@@ -51,7 +51,7 @@ public class BuzzerMySQLBuilderTest {
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);
-        Assert.that(sql.contains("customer"),"name of the table is available");
+        Assert.that(sql.contains("customer"),"name of the table is not available");
 
     }
 
@@ -69,7 +69,7 @@ public class BuzzerMySQLBuilderTest {
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);
-        Assert.that(sql.contains("customer"),"name of the table is available");
+        Assert.that(sql.contains("customer"),"name of the table is not available");
 
     }
 
@@ -91,7 +91,7 @@ public class BuzzerMySQLBuilderTest {
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);
-        Assert.that(sql.contains("ecom.customers"),"name of the table is available");
+        Assert.that(sql.contains("ecom.customers"),"name of the table is not available");
 
     }
 
@@ -115,9 +115,29 @@ public class BuzzerMySQLBuilderTest {
                 .toString();
         LOG.info("SQL generated - "+ sql);
         sqlGenerated.add(sql);
-        Assert.that(sql.contains("ecom.customers"),"name of the table is available");
+        Assert.that(sql.contains("ecom.customers"),"name of the table is not available");
 
     }
+
+    @Test
+    public void selectWithInnerQueryTest()throws Exception
+    {
+        Map<String,Object> namedParams=new HashMap<>();
+        namedParams.put("country","india");
+        namedParams.put("state","TN");
+        SQLBuilder innerQuery=factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+        innerQuery.selectColumns(new String[]{"points"}).fromTable("ecom.rewardpoints","rewards").where("customerID",BuzzerSQLConstants.SQLOperators.EQ,"kaushik@test.com");
+
+
+        String sql=sqlBuilder.selectColumns(new String[]{"rewards.pointsearned"}).fromQuery(innerQuery,"rewards")
+                .limit(10l,190890l)
+                .toString();
+        LOG.info("SQL generated - "+ sql);
+        sqlGenerated.add(sql);
+        Assert.that(sql.contains("ecom.rewardpoints"),"name of the table is not available");
+
+    }
+
 
 
     @Test
