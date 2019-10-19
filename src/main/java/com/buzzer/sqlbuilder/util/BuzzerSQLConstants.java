@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 public interface BuzzerSQLConstants {
 
     String SQL_MARKER_BOUNDARY="##";
-    String SQL_MARKER_REGEX="("+SQL_MARKER_BOUNDARY+".*"+SQL_MARKER_BOUNDARY+")";
+    String SQL_MARKER_REGEX="("+SQL_MARKER_BOUNDARY+"\\w+"+SQL_MARKER_BOUNDARY+")";
     String NEW_LINE="\n";
     String START_BRACKET="(";
     String END_BRACKET=")";
@@ -23,6 +23,7 @@ public interface BuzzerSQLConstants {
     String NON_PRINT_CHARACTERS_REGEX="\\p{C}";
     String AS="AS";
     String SINGLE_QUOTE="'";
+    String END_COLUMN_SPEC_MARKER=SQL_MARKER_BOUNDARY+"END_COLUMN_SPEC_MARKER"+SQL_MARKER_BOUNDARY;
 
     String ASTERISK="*";
     String POSITIONAL_PARAMETER="?";

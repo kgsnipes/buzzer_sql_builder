@@ -387,7 +387,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
             this.sql.append(String.format(BuzzerSQLConstants.CREATE_TABLE_START,tableName));
         }
 
-        this.sql.append(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER);
+        this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.CREATE_TABLE_ENDING_MARKER);
 
         return this;
     }
@@ -460,9 +460,32 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     protected void handleCreateStatementWithColumns(Column ...columns)throws BuzzerSQLBuilderException
     {
         this.validateColumns(columns);
-        List<String> cols=Arrays.stream(columns).filter(column -> StringUtils.isNotEmpty(column.getName())).map(c->c.getName()).collect(Collectors.toList());
-        this.sql.append(StringUtils.join(cols,BuzzerSQLConstants.COMMA));
+        List<String> cols=Arrays.stream(columns).filter(column -> StringUtils.isNotEmpty(column.getName())).map(c->getCreateTableColumnSpec(c)).collect(Collectors.toList());
+        this.sql.append(StringUtils.join(cols,BuzzerSQLConstants.COMMA)).append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.END_COLUMN_SPEC_MARKER).append(BuzzerSQLConstants.SPACE);
     }
+
+    protected String getCreateTableColumnSpec(Column c) {
+        StringBuilder colSql=new StringBuilder();
+        if(ObjectUtils.isNotEmpty(c) )
+        {
+            colSql.append(BuzzerSQLConstants.SPACE);
+            if(StringUtils.isNotEmpty(c.getName()))
+            {
+                colSql.append(c.getName()).append(BuzzerSQLConstants.SPACE);
+            }
+            if(StringUtils.isNotEmpty(c.getDataType()))
+            {
+                colSql.append(c.getDataType()).append(BuzzerSQLConstants.SPACE);
+            }
+            if(StringUtils.isNotEmpty(c.getSpecification()))
+            {
+                colSql.append(c.getSpecification()).append(BuzzerSQLConstants.SPACE);
+            }
+        }
+
+        return colSql.toString();
+    }
+
     protected void handleInsertStatementWithColumns(Column ...columns)throws BuzzerSQLBuilderException
     {
 

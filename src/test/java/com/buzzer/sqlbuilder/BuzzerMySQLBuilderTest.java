@@ -211,7 +211,15 @@ public class BuzzerMySQLBuilderTest {
 
         //create a table
         sqlBuilder= factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
-        sql=sqlBuilder.dropTable("ecom","customer").toString();
+        sql=sqlBuilder.createTable("ecom","customer",Boolean.TRUE)
+                .withColumn("pk","bigint",null,Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
+                .withColumn("email","varchar","255",Boolean.FALSE,Boolean.TRUE,null,Boolean.FALSE)
+                .withColumn("firstname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
+                .withColumn("lastname","varchar","255",Boolean.TRUE,Boolean.FALSE,null,Boolean.FALSE)
+                .withAutoIncrementValue("pk",new Long(1000))
+                .withIndexOnColumns("customer_email_index","email")
+                .withIndexOnColumns("customer_name_index","firstname","lastname")
+                .toString();
         LOG.info("SQL generated - "+ sql);
         BuzzerSQLBuilderTestUtil.getTestDBConnection().createStatement().execute(sql);
         Thread.sleep(TIME_LAG);
