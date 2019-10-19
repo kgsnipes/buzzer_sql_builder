@@ -27,6 +27,7 @@ public interface SQLBuilder {
      * @throws BuzzerSQLBuilderException
      */
     SQLBuilder dropDatabase(String database)throws BuzzerSQLBuilderException;
+    SQLBuilder dropDatabaseIfExists(String database)throws BuzzerSQLBuilderException;
     SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException;
 
     SQLBuilder selectAll()throws BuzzerSQLBuilderException ;

@@ -40,6 +40,17 @@ public class BuzzerMySQLBuilder extends BuzzerSQLBuilder implements SQLBuilder {
         return this;
     }
 
+    public SQLBuilder dropDatabaseIfExists(String database)throws BuzzerSQLBuilderException
+    {
+        if(StringUtils.isNotEmpty(this.sql.toString()))
+        {
+            this.throwExceptionForNewBuilder();
+        }
+        this.validateDatabaseName(database);
+        this.sql.append(String.format(BuzzerSQLConstants.DROP_DATABASE_IF_EXISTS_QUERY_FORMAT,database));
+        return this;
+    }
+
 
     public SQLBuilder useDatabase(String database)throws BuzzerSQLBuilderException {
         if(StringUtils.isNotEmpty(this.sql.toString()))

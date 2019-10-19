@@ -26,10 +26,10 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     protected static Set<QueryTransformer> queryTransformers=new HashSet<>();
 
     public BuzzerSQLBuilder() {
-        this.addToQueryTansformerSet();
+        this.addToQueryTransformerSet();
     }
 
-    private void addToQueryTansformerSet()
+    private void addToQueryTransformerSet()
     {
         queryTransformers.add(BuzzerCreateTableQueryTransformer.getInstance());
         queryTransformers.add(BuzzerSQLMarkerRemoverQueryTransformer.getInstance());
@@ -44,6 +44,11 @@ public class BuzzerSQLBuilder implements SQLBuilder {
     public SQLBuilder dropDatabase(String database) throws BuzzerSQLBuilderException {
         throw new BuzzerSQLBuilderException("Not supported by Generic DB");
     }
+
+    public SQLBuilder dropDatabaseIfExists(String database)throws BuzzerSQLBuilderException {
+        throw new BuzzerSQLBuilderException("Not supported by Generic DB");
+    }
+
 
 
     public SQLBuilder useDatabase(String database) throws BuzzerSQLBuilderException {
@@ -665,6 +670,7 @@ public class BuzzerSQLBuilder implements SQLBuilder {
         {
             throw new BuzzerSQLBuilderException("values cannot be empty or null");
         }
+        this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.VALUES);
         List<String> insertValues=Arrays.stream(values).filter(v->ObjectUtils.isNotEmpty(v)).map(v->getStringFromValue(v)).collect(Collectors.toList());
         this.sql.append(BuzzerSQLConstants.SPACE).append(BuzzerSQLConstants.START_BRACKET);
         this.sql.append(StringUtils.join(insertValues,BuzzerSQLConstants.COMMA));

@@ -186,4 +186,42 @@ public class BuzzerMySQLBuilderTest {
 
     }
 
+    @Test
+    public void runOnDB()throws Exception
+    {
+        //drop database if exists
+        String sql=sqlBuilder.dropDatabaseIfExists("ecom").toString();
+        LOG.info("SQL generated - "+ sql);
+        BuzzerSQLBuilderTestUtil.getTestDBConnection().createStatement().execute(sql);
+        Thread.sleep(TIME_LAG);
+
+        //create database
+        sqlBuilder= factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+        sql=sqlBuilder.createDatabase("ecom").toString();
+        LOG.info("SQL generated - "+ sql);
+        BuzzerSQLBuilderTestUtil.getTestDBConnection().createStatement().execute(sql);
+        Thread.sleep(TIME_LAG);
+
+        //use database
+        sqlBuilder= factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+        sql=sqlBuilder.useDatabase("ecom").toString();
+        LOG.info("SQL generated - "+ sql);
+        BuzzerSQLBuilderTestUtil.getTestDBConnection().createStatement().execute(sql);
+        Thread.sleep(TIME_LAG);
+
+        //create a table
+        sqlBuilder= factory.getSQLBuilderForDB(BuzzerDBType.MYSQL);
+        sql=sqlBuilder.dropTable("ecom","customer").toString();
+        LOG.info("SQL generated - "+ sql);
+        BuzzerSQLBuilderTestUtil.getTestDBConnection().createStatement().execute(sql);
+        Thread.sleep(TIME_LAG);
+
+        BuzzerSQLBuilderTestUtil.getTestDBConnection().close();
+
+
+        Assert.that(true,"done");
+    }
+
+    static int TIME_LAG=10000;
+
 }
